@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-monitor/providers/Microsoft.OperationalInsights/workspaces/brs-euw-la-t-spoke-01"
+        },
+        "location": {
+            "value": "West Europe" 
+        },
+        "actionGroupId": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-monitor/providers/Microsoft.Insights/actiongroups/brs-euw-ag-t-amon-01"
+        },
+        "alertname": {
+            "value": "Memory Usgae is High - Critical Alert" 
+        },
+        "isEnabled": {
+            "value": true
+        },
+        "windowSizeinminutes": {
+            "value": "15"
+        },
+        "evaluationFrequencyinminutes": {
+            "value": "5"
+        },
+        "alertSeverity": {
+            "value": 2
+        },
+        "triggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "metrictriggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "thresholdvalue": {
+            "value": "95" 
+        },
+        "metrictriggertype": {
+            "value": "Consecutive" 
+        }
+    }
+}

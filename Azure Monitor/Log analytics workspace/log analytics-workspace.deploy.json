@@ -1,0 +1,140 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loganalyticsworkspacename": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the loganalytics workspace"
+            }
+        },
+        "Location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location of the workspace"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('loganalyticsworkspacename')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "features": {
+                    "searchVersion": 1
+                }
+            }
+        },
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','Processor')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalyticsworkspacename'))]"
+            ],
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "WindowsPerformanceCounter",
+            "properties": {
+                "objectName": "Processor",
+                "instanceName": "_Total",
+                "intervalSeconds": 60,
+                "counterName": "% Processor Time"
+
+            }
+
+        },
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','LogicalDisk')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalyticsworkspacename'))]"
+            ],
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "WindowsPerformanceCounter",
+            "properties": {
+                "objectName": "LogicalDisk",
+                "instanceName": "*",
+                "intervalSeconds": 60,
+                "counterName": "% Free Space"
+
+            }
+
+        },
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','Memory')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalyticsworkspacename'))]"
+            ],
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "WindowsPerformanceCounter",
+            "properties": {
+                "objectName": "Memory",
+                "instanceName": "*",
+                "intervalSeconds": 60,
+                "counterName": "% Committed Bytes In Use"
+
+            }
+
+        },
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','logicaldisklinux')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalyticsworkspacename'))]"
+            ],
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "LinuxPerformanceObject",
+            "properties": {
+                "objectName": "Logicaldisk",
+                "instanceName": "*",
+                "intervalSeconds": 60,
+                "performancecounters": [
+                    {
+                        "countername": "% Free Space"
+                    }
+
+                ]
+
+            }
+
+        },
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','linuxmemory')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalyticsworkspacename'))]"
+            ],
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "LinuxPerformanceObject",
+            "properties": {
+                "objectName": "Memory",
+                "instanceName": "*",
+                "intervalSeconds": 60,
+                "PerformanceCounters": [
+                    {
+                        "CounterName":"% Used Memory"
+                    }
+                ]
+
+            }
+
+        }
+
+
+
+
+    ],
+    "outputs": {}
+}

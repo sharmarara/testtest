@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "imagename": {
+            "type": "String",
+            "metadata": {
+                "description": "the name of the image "
+            }
+        },
+        "bloburi": {
+            "type": "string",
+            "metadata": {
+                "description": "the location of the vhd image in blob"
+            }
+        },
+        "imagedisksizegb": {
+            "type": "string",
+            "metadata": {
+                "description": "the size of the image"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/images",
+            "apiVersion": "2020-12-01",
+            "name": "[parameters('imagename')]",
+            "location": "westeurope",
+            "properties": {
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Windows",
+                        "osState": "Generalized",
+                        "diskSizeGB": "[parameters('imagedisksizegb')]",
+                        "blobUri": "[parameters('bloburi')]",
+                        "caching": "ReadWrite",
+                        "storageAccountType": "Standard_LRS"
+                    },
+                    "dataDisks": [],
+                    "zoneResilient": false
+                },
+                "hyperVGeneration": "V1"
+            }
+        }
+    ]
+}

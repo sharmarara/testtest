@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "privateEndpointName": {
+            "value": "brs-euw-pep-brs-euw-kv-t-dna-01"
+        },
+        "privateLinkResource": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-dna/providers/Microsoft.KeyVault/vaults/brs-euw-kv-t-dna-01"
+        },
+        "targetSubResource": {
+            "value": [
+                "vault"
+            ]
+        },
+        "requestMessage": {
+            "value": ""
+        },
+        "subnet": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-t-01/subnets/brs-euw-snt-t-dna-01"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-t-01"
+        },
+        "subnetDeploymentName": {
+            "value": "UpdateSubnetDeployment-20211203190850"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "brs-euw-rsg-t-network"
+        }
+    }
+}

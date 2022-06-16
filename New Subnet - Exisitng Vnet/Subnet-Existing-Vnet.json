@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string"
+          },
+        "subnetPrefix": {
+            "type": "array"
+          },
+          "subnetName": {
+            "type": "array"
+          },
+
+        "nsgName": {
+           "type": "array"
+          },
+        "udrName": {
+        "type": "array"
+        },
+        "location": {
+            "type": "string"
+          }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('location')]",
+        "name":"[concat(parameters('vnetName'),'/',parameters('subnetName')[copyIndex()])]",
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]",
+          "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('subnetPrefix')[copyIndex()]]",
+           "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          },
+
+          "routeTable": {
+            "id": "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+          }
+        },
+        "copy": {
+            "name": "subnet-copy",
+            "count": "[length(parameters('subnetName'))]",
+            "mode": "Serial"
+        }
+      },
+
+       {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('nsgName')[copyIndex()]]",
+        "location": "[parameters('location')]",
+        "properties": {
+            },
+        "copy": {
+              "name": "nsg-copy",
+              "count": "[length(parameters('nsgName'))]",
+              "mode": "Serial"
+                }
+     },
+
+      {
+            "name": "[parameters('udrName')[copyIndex()]]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2018-08-01",
+            "location": "[parameters('location')]",
+            "tags": {},
+            "copy": {
+                     "name": "udr-copy",
+                     "count": "[length(parameters('udrName'))]",
+                     "mode": "Serial"
+                    },
+            "properties": {
+            "disableBgpRoutePropagation": true
+                    }
+        
+          }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "brs-euw-vnt-p-01"
+      },
+      "PeeredVnet": {
+       "value": "BR-EUW-VNT-P-HUB"
+      },
+      "PeeredVnetResourceID": {
+        "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/BR-EUW-RSG-P-HUB-NETWORK/providers/Microsoft.Network/virtualNetworks/BR-EUW-VNT-P-HUB"
+      },
+      "vnetPeeringRequied": {
+      "value": true     
+      },
+      "VnetAddressPrefix": {
+        "value": "10.46.0.0/16"
+      },
+      
+      "SubnetPrefix": {
+        "value": ["10.46.0.0/24","10.46.1.0/24","10.46.2.0/24","10.46.3.0/24","10.46.4.0/24"]
+      },
+      "SubnetName": {
+        "value": ["brs-euw-snt-p-feiaas","brs-euw-snt-p-app","brs-euw-snt-p-fepaas","brs-euw-snt-p-dbiaas","brs-euw-snt-p-dbpaas"]
+      },
+      "nsgName": {
+        "value": ["brs-euw-nsg-p-feiaas","brs-euw-nsg-p-app","brs-euw-nsg-p-fepaas","brs-euw-nsg-p-dbiaas","brs-euw-nsg-p-dbpaas"]
+      },
+      "udrName":{
+        "value": ["brs-euw-udr-p-feiaas","brs-euw-udr-p-app","brs-euw-udr-p-fepaas","brs-euw-udr-p-dbiaas","brs-euw-udr-p-dbpaas"]
+      },
+      "Location": {
+        "value": "West Europe"
+      }
+    }
+  }

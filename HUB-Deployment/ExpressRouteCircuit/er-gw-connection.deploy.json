@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ergatewaypublicip-name": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the new public ip of the express route gateway"
+            }
+        },
+        "ergatewaysubnet": {
+            "type": "string",
+            "metadata": {
+                "description": "The subnet name for the express route gateway"
+            }
+        },
+        "ergatewayvirtualnetwork": {
+            "type": "string",
+            "metadata": {
+                "description": "The virtual network name of the gateway subnet"
+            }
+        },
+        "ervpngatewayname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the expressroute gateway"
+            }
+        },
+        "ercircuitname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the express route circuit"
+            }
+        },
+        "erconnectionname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the connection between express route gateway and circuit"
+            }
+        }        
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('ergatewaypublicip-name')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },
+        {
+            "name": "[parameters('ervpngatewayname')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('ergatewaypublicip-name'))]"
+                
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "vnetgatewayconfig",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('ergatewayvirtualnetwork'), parameters('ergatewaysubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('ergatewaypublicip-name'))]"
+                            }
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "Standard",
+                    "tier": "Standard"
+                },
+                "gatewayType": "ExpressRoute",
+                "vpnType": "RouteBased",
+                "enableBgp": true
+            }
+        },
+        {
+            "name": "[parameters('erconnectionname')]",
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('ervpngatewayname'))]"
+                
+            ],
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways',parameters('ervpngatewayname'))]"
+                },
+                "peer": {
+                    "id": "[resourceId('Microsoft.Network/expressRouteCircuits',parameters('ercircuitname'))]"
+                },
+                "connectionType": "ExpressRoute"
+                
+            }
+        }
+
+
+    ],
+    "outputs": {}
+}

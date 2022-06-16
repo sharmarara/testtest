@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+          "value": "/subscriptions/d6604436-1b4d-485c-b073-f3a9e818e745/resourcegroups/exs-euw-rsg-u-monitor/providers/microsoft.operationalinsights/workspaces/exs-euw-la-u-spoke-01"
+        },
+        "location": {
+          "value": "West Europe"
+        },
+        "actionGroupId": {
+          "value": "/subscriptions/d6604436-1b4d-485c-b073-f3a9e818e745/resourceGroups/exs-euw-rsg-u-monitor/providers/Microsoft.Insights/actiongroups/exs-euw-ag-u-amon-01"
+        }
+    }
+  }

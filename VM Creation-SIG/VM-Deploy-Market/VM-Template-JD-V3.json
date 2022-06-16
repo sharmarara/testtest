@@ -1,0 +1,300 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineAdminUserName": {
+            "defaultValue": "azadmin",
+            "type": "string",
+            "metadata": {
+                "description": "Administrator Username for the local admin account"
+            }
+        },
+        "virtualMachineAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Administrator password for the local admin account"
+            }
+        },
+        "VirtualMachineName": {
+            "type": "array",
+            "metadata": {
+                "description": "Name of the virtual machine to be created"
+            }
+        },
+        "virtualMachineSize": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Machine Size"
+            }
+        },
+        "EnableAcceleratedNetworking": {
+            "type": "bool"
+        },
+        "noOfDataDisk": {
+            "type": "int"
+        },
+        "dataDiskSize": {
+            "type": "int"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the storage account"
+            }
+        },
+        "storageAccountResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the resource group for the existing storage account"
+            }
+        },
+        "existingVirtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing VNET"
+            }
+        },
+        "existingVirtualNetworkResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing VNET resource group"
+            }
+        },
+        "Infra-SubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet in the virtual network you want to use"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "domainJoinUserName": {
+            "type": "string",
+            "metadata": {
+                "description": "Domain NetBiosName plus User name of a domain user with sufficient rights to perfom domain join operation. E.g. domain\\username"
+            }
+        },
+        "domainJoinUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Domain user password"
+            }
+        },
+        "domainFQDN": {
+            "type": "string",
+            "metadata": {
+                "description": "Domain FQDN where the virtual machine will be joined"
+            }
+        },
+        "ouPath": {
+            "type": "string",
+            "defaultValue": "OU=Desktop; OU=ZA; OU=Workstations-MIG2; DC=mignetwork; DC=net",
+            "metadata": {
+                "description": "Specifies an organizational unit (OU) for the domain account. Enter the full distinguished name of the OU in quotation marks. Example: \"OU=testOU; DC=domain; DC=Domain; DC=com\""
+            }
+        },
+        "operatingSystem": {
+            "type": "string",
+            "defaultValue": "Windows2019",
+            "metadata": {
+                "description": "Operating System of the Server"
+        },
+        "allowedValues": [
+            "Windows2012R2",
+            "Windows2016",
+            "Windows2019",
+            "Windows-10"
+        ]
+        },
+        "Availabilityzone": {
+            "type": "array",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "Ostype": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "artifactURI": {
+            "type": "string",
+            "defaultValue":"https://brheuwstopvmcse001.blob.core.windows.net/artifacts",
+            "metadata": {
+                "description": "description"
+            }
+        }     
+    },
+    "variables": {
+        "InfraSubnetRef": "[resourceId(parameters('existingVirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVirtualNetworkName'),  parameters('Infra-SubnetName'))]",
+        "domainJoinOptions": 3,
+        "operatingSystemValues": {
+                          "Windows2012R2": {
+                            "PublisherValue": "MicrosoftWindowsServer",
+                            "OfferValue": "WindowsServer",
+                            "SkuValue": "2012-R2-Datacenter"
+                          },
+                          "Windows2016": {
+                            "PublisherValue": "MicrosoftWindowsServer",
+                            "OfferValue": "WindowsServer",
+                            "SkuValue": "2016-Datacenter"
+                          },
+                          "Windows2019": {
+                            "PublisherValue": "MicrosoftWindowsServer",
+                            "OfferValue": "WindowsServer",
+                            "SkuValue": "2019-Datacenter"
+                          },
+                         "Windows-10": {
+                            "PublisherValue": "MicrosoftWindowsDesktop",
+                            "OfferValue": "Windows-10",
+                            "SkuValue": "20h1-evd"
+                          } 
+                    }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(parameters('VirtualMachineName')[copyIndex()],'-NIC')]",
+            "apiVersion": "2018-11-01",
+            "location": "[parameters('location')]",
+            "copy": {
+                "name": "NICCopy",
+                "count": "[length(parameters('VirtualMachineName'))]",
+                "mode": "Serial"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('InfraSubnetRef')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "10.45.0.132",
+                        "10.45.0.133"
+                    ]
+                },
+                "enableIPForwarding": false,
+                "enableAcceleratedNetworking": "[parameters('EnableAcceleratedNetworking')]"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('VirtualMachineName')[copyIndex()]]",
+            "apiVersion": "2019-07-01",
+            "location": "[parameters('location')]",
+            "zones": [
+                "[parameters('Availabilityzone')[copyIndex()]]"
+            ],
+            "copy": {
+                "name": "VMCopy",
+                "count": "[length(parameters('VirtualMachineName'))]",
+                "mode": "Serial"
+            },
+            "properties": {
+                "licenseType": "Windows_Server",
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('operatingSystemValues')[parameters('operatingSystem')].PublisherValue]",
+                        "offer": "[variables('operatingSystemValues')[parameters('operatingSystem')].OfferValue]",
+                        "sku": "[variables('operatingSystemValues')[parameters('operatingSystem')].SkuValue]",
+                        "version": "latest"
+                    },
+                "osDisk": {
+                        "name": "[concat(parameters('VirtualMachineName')[copyIndex()],'-OSDisk')]",
+                        "createOption": "FromImage",
+                        "osType": "[parameters('Ostype')]",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS" 
+                        }
+                    },
+                    "copy": [
+                        {
+                            "name": "dataDisks",
+                            "count": "[parameters('noOfDataDisk')]",
+                            "input": {
+                                "diskSizeGB": "[parameters('dataDiskSize')]",
+                                "lun": "[copyIndex('dataDisks')]",
+                                "createOption": "Empty",
+                                "managedDisk": {
+                                    "storageAccountType": "StandardSSD_LRS"
+                                },
+                                "name": "[concat(parameters('VirtualMachineName')[copyIndex()],'-Data-Disk')]"
+                            }
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('VirtualMachineName')[copyIndex()]]",
+                    "adminUsername": "[parameters('virtualMachineAdminUserName')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [
+                    ],
+                    "adminPassword": "[parameters('virtualMachineAdminPassword')]"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('VirtualMachineName')[copyIndex()],'-NIC'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[reference(resourceId(parameters('storageAccountResourceGroupName'), 'Microsoft.Storage/storageAccounts/', parameters('storageAccountName')), '2017-06-01').primaryEndpoints.blob]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('VirtualMachineName')[copyIndex()],'-NIC'))]"
+            ]
+        },
+        {
+            "comments": "Join domain - JsonADDomainExtension",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName')[copyIndex()])]"              
+            ],
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VirtualMachineName')[copyIndex()],'/joindomain')]",
+            "location": "[parameters('location')]",
+            "copy": {
+                "name": "domain-copy",
+                "count": "[length(parameters('VirtualMachineName'))]"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "1.3",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "Name": "[parameters('domainFQDN')]",
+                    "User": "[parameters('domainJoinUserName')]",
+                    "Restart": "true",
+                    "Options": "[variables('domainJoinOptions')]",
+                    "OUPath": "[parameters('ouPath')]"
+                },
+                "protectedSettings": {
+                    "Password": "[parameters('domainJoinUserPassword')]"
+                }
+            }
+        }
+    ]
+}

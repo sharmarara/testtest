@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azurefirewallname": {
+            "value": "brh-trn-euw-afw-hub-01"
+        },
+        "virtualNetworkName": {
+            "value": "brh-trn-euw-vnt-hub-01"
+        },
+        "transithubnetworkrg": {
+            "value": "brh-trn-euw-rsg-hub-network"
+        },
+        "firewallSubnet": {
+            "value": "AzureFirewallSubnet"
+        },
+        "publicipname": {
+            "value": "brh-trn-euw-pip-hub-afw-01"
+        },
+        "firewallroutetable": {
+            "value": "brh-trn-euw-udr-hub-afw"
+        },
+        "availabilityzone": {
+            "value": [
+                "1"
+            ]
+        },
+        "networkCollectionName": {
+            "value": "rpa-dwf-azfw-rules-01"
+        },
+        "networkcollectioName-deny": {
+            "value": "Implicit-deny"
+        }
+    }
+}

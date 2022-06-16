@@ -1,0 +1,437 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+
+  "parameters" : {
+      "storageAccountName": {
+        "type": "string",
+        "metadata": {
+          "description": "Storage Account Name"
+        }
+      },
+      
+      "publicIpAddressName": {
+            "type": "String"
+        },
+        "publicIpAddressType": {
+            "type": "String"
+        },
+        "publicIpAddressSku": {
+            "type": "String"
+        },
+      "virtualMachineSize": {
+        "type": "string",
+        "allowedValues": [
+          "Standard_DS3_v2",
+          "Standard_DS4_v2",
+          "Standard_DS5_v2",
+          "Standard_DS1_v2"
+        ],
+        "metadata": {
+          "description": "vSRX Virtual Machine Size"
+        },
+        "defaultValue": "Standard_DS3_v2"
+      },
+      "vsrx-name": {
+        "type": "string",
+        "metadata": {
+          "description": "vSRX Name"
+        },
+        "defaultValue": "vsrx-gw"
+      },
+      "authenticationType": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "sshPublicKey",
+        "password"
+      ],
+      "metadata": {
+        "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+      }
+    },
+      "vsrx-username": {
+        "type": "string",
+        "metadata": {
+          "description": "vSRX user name"
+        },
+        "defaultValue": "demo"
+      },
+      "vsrx-passwordorkey": {
+        "type": "securestring",
+        "metadata": {
+          "description": "vSRX user password"
+        }
+      },
+      "vnet-name": {
+        "type": "string",
+        "metadata": {
+          "description": "Virtual network name - new or existing vnet"
+        }
+      },
+    
+      "vnet-mgt-subnet-name": {
+        "type": "string",
+        "metadata": {
+          "description": "Management subnet name"
+        },
+        "defaultValue": "Management"
+      },
+      "osDiskType": {
+        "type" : "string"
+      },
+
+      "vnet-trust-subnet-name": {
+        "type": "string",
+        "metadata": {
+          "description": "Trust subnet name"
+        },
+        "defaultValue": "Trust"
+      },
+    
+      "virtualNetworkExistingRGName":{
+        "type": "string",
+          "metadata": {
+              "description": "Resource Group of the existing virtual network"
+          },
+          "defaultValue": "[resourceGroup().name]"
+      },
+      "location":{ 
+        "type" : "string"
+      }
+      
+  },
+
+  "variables": {
+      "vnet-name":  "[parameters('vnet-name')]",
+      "count": 2,
+      "zones": [
+        "1",
+        "2"
+      ],
+       "mgmtPublicIPIds": [
+            "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('publicIpAddressName'), '1'))]",
+            "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('publicIpAddressName'), '2'))]"
+        ],
+      "mgtNicName": "fxp0",
+      "diskSizeGB" : "100",
+      "trustNicName" : "nic-01",
+      "ilbName": "brh-euw-ilb-p-hub-fwj",
+      "ilbId": "[resourceId('Microsoft.Network/loadBalancers', variables('ilbName'))]",
+      "ilbBEAddressPool": "[concat(variables('ilbName'), '-pool01')]",
+      "ilbBEAddressPoolID": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools/', variables('ilbName'), variables('ilbBEAddressPool'))]",
+      "ilbFEIPConfigID": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations/', variables('ilbName'), concat(variables('ilbName'), '-ip01'))]",
+      "ilbProbeName": "[concat(variables('ilbName'), '-probe01')]",
+      "ilbProbeID": "[resourceId('Microsoft.Network/loadBalancers/probes/', variables('ilbName'), variables('ilbProbeName'))]",
+      "location" : "[parameters('location')]",
+    "storageAccountName": "[parameters('storageAccountName')]",
+"linuxConfiguration": {
+      "disablePasswordAuthentication": true,
+      "ssh": {
+        "publicKeys": [
+          {
+            "path": "[concat('/home/', parameters('vsrx-username'), '/.ssh/authorized_keys')]",
+            "keyData": "[parameters('vsrx-passwordorkey')]"
+          }
+        ]
+      }
+    },
+  
+
+      "vsrxVM": {
+          "vmSize": "[parameters('virtualMachineSize')]",
+          "vmName": "[parameters('vsrx-name')]"
+        
+      },
+      "vnet-id": "[resourceId(parameters('virtualNetworkExistingRGName'),'Microsoft.Network/virtualNetworks', variables('vnet-name'))]",
+      "vnet-trust-subnet-id": "[concat(variables('vnet-id'),'/subnets/', parameters('vnet-trust-subnet-name'))]",
+      "vnet-mgt-subnet-id": "[concat(variables('vnet-id'),'/subnets/', parameters('vnet-mgt-subnet-name'))]"
+       },
+
+  "resources": [  
+   
+    
+      {
+          "type": "Microsoft.Storage/storageAccounts",
+          "name": "[variables('storageAccountName')]",
+          "apiVersion": "2015-06-15",
+          "location": "[variables('location')]",
+          "properties": {
+            "accountType": "Standard_LRS"
+          },
+          "kind": "Storage"
+      },
+      
+      {
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2019-02-01",
+            "name": "[concat(parameters('publicIpAddressName'), copyIndex(1))]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            },
+            "copy": {
+                "name": "publicAddressCopy",
+                "count": "[variables('count')]"
+            },
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            }
+        },
+      {
+         "apiVersion": "2018-11-01",
+         "type": "Microsoft.Network/networkInterfaces",
+         "name": "[concat(parameters('vsrx-name'),   '1-', variables('mgtNicName'))]",
+         "location": "[variables('location')]",
+         "dependsOn": [
+          "[variables('mgmtPublicIPIds')[0]]"
+         ],
+         "properties": {
+           "ipConfigurations": [
+             {
+               "name": "ipconfig1",
+               "properties": {
+                 "privateIPAddress": "10.45.0.68",
+                 "privateIPAllocationMethod": "Static",
+                 "subnet": {
+                   "id": "[variables('vnet-mgt-subnet-id')]"
+                 },
+                 "publicIpAddress": {
+                                "id": "[variables('mgmtPublicIPIds')[0]]"
+                            }
+                 }
+             }
+           ]
+         }
+      },
+      {
+         "apiVersion": "2018-11-01",
+         "type": "Microsoft.Network/networkInterfaces",
+         "name": "[concat(parameters('vsrx-name'),   '2-', variables('mgtNicName'))]",
+         "location": "[variables('location')]",
+         "dependsOn": [
+          "[variables('mgmtPublicIPIds')[1]]"
+         ],
+         "properties": {
+           "ipConfigurations": [
+             {
+               "name": "ipconfig1",
+               "properties": {
+                
+                 "privateIPAddress": "10.45.0.69",
+                 "privateIPAllocationMethod": "Static",
+                 "subnet": {
+                   "id": "[variables('vnet-mgt-subnet-id')]"
+                 },
+                 "publicIpAddress": {
+                                "id": "[variables('mgmtPublicIPIds')[1]]"
+                            }
+                 }
+             }
+           ]
+         }
+      },
+      
+      {
+         "apiVersion": "2018-11-01",
+         "type": "Microsoft.Network/networkInterfaces",
+         "name": "[concat(parameters('vsrx-name'),  '1-', variables('trustNicName'))]",
+         "location": "[variables('location')]",
+         "dependsOn": [
+        
+          "[variables('ilbId')]"
+         ],
+         "properties": {
+           "ipConfigurations": [
+             {
+               "name": "ipconfig1",
+               "properties": {
+                    "privateIPAddress": "10.45.0.53",
+                    "privateIPAllocationMethod": "Static",
+                 "subnet": {
+                   "id": "[variables('vnet-trust-subnet-id')]"
+                 },
+                 "loadBalancerBackendAddressPools": [
+                              {
+                                  "id": "[variables('ilbBEAddressPoolID')]"
+                              }
+                          ]
+                 
+               }
+             }
+           ],
+           "enableIPForwarding": true
+         }
+      },
+      {
+         "apiVersion": "2018-11-01",
+         "type": "Microsoft.Network/networkInterfaces",
+         "name": "[concat(parameters('vsrx-name'),  '2-', variables('trustNicName'))]",
+         "location": "[variables('location')]",
+         "dependsOn": [
+        
+          "[variables('ilbId')]"
+         ],
+         "properties": {
+           "ipConfigurations": [
+             {
+               "name": "ipconfig1",
+               "properties": {
+                    "privateIPAddress": "10.45.0.54",
+                    "privateIPAllocationMethod": "Static",
+                 "subnet": {
+                   "id": "[variables('vnet-trust-subnet-id')]"
+                 },
+                 "loadBalancerBackendAddressPools": [
+                              {
+                                  "id": "[variables('ilbBEAddressPoolID')]"
+                              }
+                          ]
+                 
+               }
+             }
+           ],
+           "enableIPForwarding": true
+         }
+      },
+      {
+        "apiVersion": "2019-03-01",
+        "name": "[concat(parameters('vsrx-name'),copyIndex(1))]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[variables('location')]",
+       "zones": [
+              "[variables('zones')[copyIndex()]]"
+       ] ,
+            
+        "copy": {
+              "name": "virtualMachineCopy",
+              "count": "[variables('count')]"
+          },
+      "plan": {
+    "name": "vsrx-azure-image-byol",
+    "publisher": "juniper-networks",
+    "product": "vsrx-next-generation-firewall-payg"
+     },
+         "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces/', concat(parameters('vsrx-name'), copyIndex(1), '-', variables('mgtNicName')))]",
+           "[resourceId('Microsoft.Network/networkInterfaces/', concat(parameters('vsrx-name'), copyIndex(1), '-',  variables('trustNicName')))]",
+           "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+         ],
+        "properties": {
+          "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                      "enabled": true,
+                      "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2018-07-01').primaryEndpoints.blob]"
+                  }
+          },
+            "hardwareProfile": {
+              "vmSize": "[variables('vsrxVM').vmSize]"
+            },
+      "storageProfile": {
+            "osDisk": {
+            "name": "[concat(parameters('vsrx-name'),copyIndex(1), '-osdisk')]",
+                "caching": "ReadWrite",
+                 "createOption": "FromImage",
+                 "diskSizeGB": "[variables('diskSizeGB')]",
+                 "managedDisk": {
+                          "storageAccountType": "[parameters('osDiskType')]"
+                      }
+              },
+     "imageReference": {
+              "publisher": "juniper-networks",
+              "offer": "vsrx-next-generation-firewall-payg",
+              "sku": "vsrx-azure-image-byol",
+            "version": "latest"
+          }
+    
+        
+          },
+            "osProfile": {
+              "computerName": "[concat(toLower(parameters('vsrx-name')), copyIndex(1))]",
+              "adminUsername": "[parameters('vsrx-username')]",
+              "adminPassword": "[parameters('vsrx-passwordorkey')]",
+              "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+              
+            },
+            "networkProfile": {
+              "networkInterfaces": [
+                {
+                  "id": "[resourceId('Microsoft.Network/networkInterfaces',  concat(parameters('vsrx-name'), copyIndex(1), '-', variables('mgtNicName')))]",
+                  "properties": {
+                      "primary": true
+                  }
+                },
+                {
+                  "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vsrx-name'), copyIndex(1), '-',  variables('trustNicName')))]",
+                  "properties": {
+                      "primary": false
+                  }
+                }
+              ]
+            }
+        }
+      },
+      {
+          "type": "Microsoft.Network/loadBalancers",
+          "apiVersion": "2018-11-01",
+          "name": "[variables('ilbName')]",
+          "location": "[variables('location')]",
+          "sku": {
+              "name": "Standard"
+          },
+          "properties": {
+              "frontendIPConfigurations": [
+                  {
+                      "name": "[concat(variables('ilbName'), '-ip01')]",
+                      "properties": {
+                          "privateIPAddress": "10.45.0.52",
+                          "privateIPAllocationMethod": "Static",
+                          "subnet": {
+                              "id": "[variables('vnet-trust-subnet-id')]"
+                          }
+                      }
+                  }
+              ],
+              "backendAddressPools": [
+                  {
+                      "name": "[variables('ilbBEAddressPool')]"
+                  }
+              ],
+              "loadBalancingRules": [
+                  {
+                      "name": "[concat(variables('ilbName'), '-rule01')]",
+                      "properties": {
+                          "frontendIPConfiguration": {
+                              "id": "[variables('ilbFEIPConfigID')]"
+                          },
+                          "backendAddressPool": {
+                              "id": "[variables('ilbBEAddressPoolID')]"
+                          },
+                          "probe": {
+                              "id": "[variables('ilbProbeID')]"
+                          },
+                          "protocol": "TCP",
+                          "frontendPort": 22,
+                          "backendPort": 22,
+                           "idleTimeoutInMinutes": 5,
+                          "enableFloatingIP": false
+                      }
+                  }
+              ],
+              "probes": [
+                  {
+                      "name": "[variables('ilbProbeName')]",
+                      "properties": {
+                          "protocol": "tcp",
+                          "port": 22,
+                          "intervalInSeconds": 5,
+                          "numberOfProbes": 2
+                      }
+                  }
+              ]
+          }
+      }
+  ],
+
+  "outputs": {  }
+}

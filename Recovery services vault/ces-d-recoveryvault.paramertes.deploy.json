@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Recoveryvaultname": {
+            "value": "ces-euw-rsv-d-01"
+        },
+        "Backuppolicyname": {
+            "value": "ces-euw-bck-d-01"            
+        },
+        "Recoveryvaultlocation": {
+            "value": "West Europe"
+        }
+    }
+}

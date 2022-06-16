@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "value": "brs-euw-vnt-t-01"
+        },
+        "subnetPrefix": {
+            "value": ["10.48.8.0/22"]
+        },
+        "subnetName": {
+            "value": ["brs-euw-snt-t-aks"]
+        },
+        "nsgName": {
+            "value": ["brs-euw-nsg-t-aks"]
+        },
+        "udrName": {
+            "value": ["brs-euw-udr-t-aks"]
+            
+        },
+        "location": {
+            "value": "west europe"
+        }
+    }
+}

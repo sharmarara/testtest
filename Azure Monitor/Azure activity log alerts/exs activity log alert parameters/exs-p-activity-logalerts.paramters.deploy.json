@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "activitylogalertenabled": {
+            "value": true
+        },
+        "actiongroupresourceid": {
+            "value": "/subscriptions/64b26c21-bac5-42c2-8421-d879c44c1dd9/resourceGroups/exs-euw-rsg-p-monitor/providers/Microsoft.Insights/actiongroups/exs-euw-ag-p-amon-01"
+        }
+    }
+}

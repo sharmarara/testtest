@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgname":{
+            "value": ["brh-euw-rsg-p-hub-alt", "brh-euw-rsg-p-hub-network", "brh-euw-rsg-p-hub-goldenimage", "brh-euw-rsg-p-hub-fwc","brh-euw-rsg-p-hub-doc","brh-euw-rsg-p-hub-diagsto","brh-euw-rsg-p-hub-monitor","brh-euw-rsg-p-hub-keyv","brh-euw-rsg-p-hub-rsv","brh-euw-rsg-p-hub-sig"]
+        },
+        "rgLocation":{
+            "value": "west europe"
+        }
+    }
+}

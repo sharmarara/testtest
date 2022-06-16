@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspacesolution": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the start/stop workspace solution"
+            }
+        },
+        "loganalytics": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the loganalytics workspace"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+{
+    "name": "[concat(parameters('workspacesolution'), '[',parameters('loganalytics'),']')]",
+    "type": "Microsoft.OperationsManagement/solutions",
+    "apiVersion": "2015-11-01-preview",
+    "location": "[resourceGroup().location]",
+    "tags": {
+    },
+    "properties": {
+        "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('loganalytics'))]",
+        "referencedResources": [
+        ],
+        "containedResources": [
+            "[resourceId('Microsoft.OperationalInsights/workspaces/views', parameters('loganalytics'), parameters('workspacesolution'))]"
+        ]
+    },
+    "plan": {
+        "name": "[concat(parameters('workspacesolution'), '[',parameters('loganalytics'),']')]",
+        "product": "VmManagementSolution",
+        "publisher": "Microsoft",
+        "promotionCode": ""
+    }
+}
+    ],
+    "outputs": {}
+}

@@ -1,0 +1,140 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "type": "string"
+      },
+      
+      
+      
+      "VnetAddressPrefix": {
+        "type": "string"
+      },
+      
+      "SubnetPrefix": {
+        "type": "array"
+      },
+
+      "SubnetName": {
+        "type": "array"
+      },
+      "nsgName": {
+        "type": "array"
+      },
+      "udrName": {
+        "type": "array"
+      },
+      "Location": {
+         "type": "string"
+        }
+    },
+    "variables": {
+      
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('nsgName')[copyIndex()]]",
+        "location": "[parameters('Location')]",
+        "properties": {
+          "securityRules":[
+            {
+              "name": "Deny_All",
+              "properties": {
+                "description": "Deny Rule",
+                "protocol" : "*",
+                "sourcePortRange":"*",
+                "destinationPortRange":"*",
+                "sourceAddressPrefix":"*",
+                "destinationAddressPrefix":"*",
+                "access": "Deny",
+                "priority": 2000,
+                "direction": "Inbound"
+
+              }
+            }
+            ]
+            },
+        "copy": {
+              "name": "nsg-copy",
+              "count": "[length(parameters('nsgName'))]",
+              "mode": "Serial"
+                }
+     },
+    {
+             "type": "Microsoft.Network/virtualNetworks",
+             "apiVersion": "2018-08-01",
+            "name": "[parameters('VnetName')]",
+            "location": "[parameters('Location')]",
+         
+         "properties": {
+            "addressSpace": {
+                "addressPrefixes": [
+                    "[parameters('VnetAddressPrefix')]"
+                ]
+            }
+        }
+         },
+            {
+              "type": "Microsoft.Authorization/locks",
+              "apiVersion": "2016-09-01",
+              "name": "Virtual-Network-Locks",
+              "scope":"[concat('Microsoft.Network/virtualNetworks/',parameters('VnetName'))]",
+      "dependsOn": [
+                    "[parameters('VnetName')]"
+      ],
+              "properties": {
+                "level": "CanNotDelete",
+                "notes": "Prevent Deleting Virtual Network"
+              }
+            },
+          {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', parameters('SubnetName')[copyIndex()])]",
+        "dependsOn": [
+          "[parameters('VnetName')]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]",
+          "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('SubnetPrefix')[copyIndex()]]",
+          "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          },
+
+          "routeTable": {
+            "id": "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+          }
+        },
+        "copy": {
+            "name": "subnet-copy",
+            "count": "[length(parameters('SubnetName'))]",
+            "mode": "Serial"
+        }
+      },
+    
+         {
+            "name": "[parameters('udrName')[copyIndex()]]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2018-08-01",
+            "location": "[parameters('Location')]",
+            "tags": {},
+            "copy": {
+                     "name": "udr-copy",
+                     "count": "[length(parameters('udrName'))]",
+                     "mode": "Serial"
+                    },
+            "properties": {
+            "disableBgpRoutePropagation": true
+                    }
+        
+          }
+        
+            ],
+  
+    "outputs": {}
+}

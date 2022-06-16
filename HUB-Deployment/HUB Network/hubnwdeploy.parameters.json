@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "brh-euw-vnt-p-hub"
+      },
+      "VnetAddressPrefix": {
+        "value": "10.45.0.0/16"
+      },
+	   "bastion-subnet-ip-prefix":{
+              "value": "10.45.3.0/27"
+          },
+     
+		  
+      "GatewaySubnetPrefix": {
+        "value": "10.45.0.96/27"
+      },
+      "SubnetPrefix": {
+        "value": ["10.45.0.0/28","10.45.0.16/28","10.45.0.32/28","10.45.0.48/28","10.45.0.64/28","10.45.0.80/28","10.45.1.0/24","10.45.0.128/26","10.45.2.0/24"]
+      },
+      "SubnetName": {
+        "value": ["brh-euw-snt-p-hub-cp-ext","brh-euw-snt-p-hub-cp-int","brh-euw-snt-p-hub-jp-untrust","brh-euw-snt-p-hub-jp-trust","brh-euw-snt-p-hub-jp-mgmt","brh-euw-snt-p-hub-waf-int","brh-euw-snt-p-hub-waf-ext","brh-euw-snt-p-hub-infra","brh-euw-snt-p-hub-mgmt"]
+      },
+      "nsgName": {
+        "value": ["brh-euw-nsg-p-hub-cp-ext","brh-euw-nsg-p-hub-cp-int","brh-euw-nsg-p-hub-jp-untrust","brh-euw-nsg-p-hub-jp-trust","brh-euw-nsg-p-hub-jp-mgmt","brh-euw-nsg-p-hub-waf-int","brh-euw-nsg-p-hub-waf-ext","brh-euw-nsg-p-hub-infra","brh-euw-nsg-p-hub-mgmt"]
+      },
+      "udrName":{
+        "value": ["brh-euw-udr-p-hub-infra","brh-euw-udr-p-hub-mgmt"]
+      },
+      "Location": {
+        "value": "west europe"
+      }
+    }
+  }

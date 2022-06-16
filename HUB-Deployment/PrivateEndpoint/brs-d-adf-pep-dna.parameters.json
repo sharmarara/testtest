@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "privateEndpointName": {
+            "value": "brh-euw-pep-brs-euw-adf-d-dna-01"
+        },
+        "privateLinkResource": {
+            "value": "/subscriptions/96306a04-91b8-4042-862e-14e86d8101fe/resourceGroups/brs-euw-rsg-d-dna/providers/Microsoft.DataFactory/factories/brs-euw-adf-d-dna-01"
+        },
+        "targetSubResource": {
+            "value": [
+                "dataFactory"
+            ]
+        },
+        "requestMessage": {
+            "value": ""
+        },
+        "subnet": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-network/providers/Microsoft.Network/virtualNetworks/brh-euw-vnt-p-hub/subnets/brh-euw-snt-p-hub-shir"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-network/providers/Microsoft.Network/virtualNetworks/brh-euw-vnt-p-hub"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "brh-euw-rsg-p-hub-network"
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "west europe"
+        },
+        "circuitName": {
+            "value": "brh-euw-erc-p-hub-bt-01"
+        },
+        "portType": {
+            "value": true
+        },
+        "createType": {
+            "value": true
+        },
+        "serviceProviderName": {
+            "value": "British Telecom"
+        },
+        "peeringLocation": {
+            "value": "Amsterdam"
+        },
+        "bandwidthInMbps": {
+            "value": 1000
+        },
+        "sku_tier": {
+            "value": "Standard"
+        },
+        "sku_family": {
+            "value": "MeteredData"
+        },
+        "allowClassicOperations": {
+            "value": false
+        },
+        "tagsByResource": {
+            "value": {}
+        },
+        "expressRoutePort": {
+            "value": {}
+        },
+        "bandwidthInGbps": {
+            "value": 0
+        }
+    }
+}

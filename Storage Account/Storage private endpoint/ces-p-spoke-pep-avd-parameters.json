@@ -1,0 +1,19 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpointName": {
+            "value": "ces-euw-pep-ceseuwstopavd01"
+        },
+        "SubnetName": {
+            "value": "ces-euw-snt-p-avd-mtm"
+        },
+        "virtualNetworkexternalid": {
+            "value": "/subscriptions/20e5b9e1-dd74-4034-bc0b-4715f62f4991/resourceGroups/ces-euw-rsg-p-network/providers/Microsoft.Network/virtualNetworks/ces-euw-vnt-p-01"
+        },
+        "storageAccountexternalid": {
+            "value": " Needs to put storage resource ID"
+        }
+       
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "value": "brs-euw-vnt-p-01"
+        },
+        "subnetPrefix": {
+            "value": ["10.46.8.0/22"]
+        },
+        "subnetName": {
+            "value": ["brs-euw-snt-p-aks"]
+        },
+        "nsgName": {
+            "value": ["brs-euw-nsg-p-aks"]
+        },
+        "udrName": {
+            "value": ["brs-euw-nsg-p-aks"]
+            
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "keyvaultserviceendpoint": {
+            "value": "Microsoft.keyvault"
+        }
+    }
+}

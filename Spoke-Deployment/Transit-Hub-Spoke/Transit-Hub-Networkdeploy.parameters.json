@@ -1,0 +1,26 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "brh-trn-euw-vnt-hub-01"
+      },
+      "VnetAddressPrefix": {
+        "value": "10.53.0.0/16"
+      },
+
+      "SubnetPrefix": {
+        "value": ["10.53.0.0/27"]
+      },
+      "SubnetName": {
+        "value": ["GatewaySubnet"]
+      },
+      
+      "udrName":{
+        "value": ["brh-trn-euw-udr-hub-gw"]
+      },
+      "Location": {
+        "value": "west europe"
+      }
+    }
+  }

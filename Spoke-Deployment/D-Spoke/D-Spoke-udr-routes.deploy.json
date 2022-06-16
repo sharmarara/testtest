@@ -1,0 +1,1284 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {
+        "approutetable": "brs-euw-udr-d-app",
+        "dbiaasroutetable": "brs-euw-udr-d-dbiaas",
+        "dbpaasroutetable": "brs-euw-udr-d-dbpaas",
+        "feiaasroutetable": "brs-euw-udr-d-feiaas",
+        "fepaasroutetable": "brs-euw-udr-d-fepaas",
+        "aksroutetable": "brs-euw-udr-d-aks",
+        "dna01routetable": "brs-euw-udr-d-dna-01",
+        "dna02routetable": "brs-euw-udr-d-dna-02",
+        "dna03routetable": "brs-euw-udr-d-dna-03",
+        "SubnetApp": "brs-euw-snt-d-app",
+        "SubnetFeiaas": "brs-euw-snt-d-feiaas",
+        "SubnetFepass": "brs-euw-snt-d-fepaas",
+        "SubnetDbiaas": "brs-euw-snt-d-dbiaas",
+        "SubnetDbpaas": "brs-euw-snt-d-dbpaas",
+        "Subnetdna01": "brs-euw-snt-d-aks",
+        "Subnetdna02": "brs-euw-snt-d-dna-01",
+        "Subnetdna03": "brs-euw-snt-d-dna-02",
+        "Subnetaks": "brs-euw-snt-d-dna-03",
+        "nsgsubnetapp": "brs-euw-nsg-d-app",
+        "nsgsubnetFeiaas": "brs-euw-nsg-d-dbiaas",
+        "nsgsubnetFepaas": "brs-euw-nsg-d-dbpaas",
+        "nsgsubnetDbiaas": "brs-euw-nsg-d-feiaas",
+        "nsgsubnetdna01": "brs-euw-nsg-d-dna-01",
+        "nsgsubnetdna02": "brs-euw-nsg-d-dna-02",
+        "nsgsubnetdna03": "brs-euw-nsg-d-dna-03",
+        "nsgsubnetdbpaas": "brs-euw-nsg-d-fepaas",
+        "brsdevvirtualnetwork": "brs-euw-vnt-d-01"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('SubnetApp'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.1.0/24",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('approutetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetapp'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('approutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-app-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-app-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('SubnetDbiaas'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.3.0/24",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('dbiaasroutetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetDbiaas'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('dbiaasroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbiaas-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('SubnetDbpaas'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.4.0/24",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('dbpaasroutetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetdbpaas'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('dbpaasroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', variables('dbiaasroutetable'))]"
+            ],
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dbpaas-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('SubnetFeiaas'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.0.0/24",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('feiaasroutetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetFeiaas'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('feiaasroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-feiaas-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('SubnetFepass'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.2.0/24",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('fepaasroutetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetFepaas'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('fepaasroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-fepaas-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('Subnetaks'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.8.0/22",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('aksroutetable'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "microsoft.storage"
+                    },
+                    {
+                        "service": "microsoft.keyvault"
+                    }
+
+                ]
+            }
+        },
+        {
+            "name": "[variables('aksroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-aks-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('Subnetdna01'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.12.0/26",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('dna01routetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetdna01'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.storage",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.Sql",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.ContainerRegistry",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('dna01routetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('Subnetdna02'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.13.0/26",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('dna02routetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetdna02'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.storage",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('dna02routetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-Ecoplast-database",
+                        "properties": {
+                            "addressPrefix": "1.1.1.242/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[concat(variables('brsdevvirtualnetwork'),'/',variables('Subnetdna03'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "properties": {
+                "addressPrefix": "10.49.14.0/26",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',variables('dna03routetable'))]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('nsgsubnetdna03'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.storage",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.KeyVault",
+                        "locations": [
+                            "West Europe"
+                        ]
+                    }
+                ]
+
+            }
+        },
+        {
+            "name": "[variables('dna03routetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "disableBgpRoutePropagation": true,
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-Ecoplast-database",
+                        "properties": {
+                            "addressPrefix": "1.1.1.242/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-onpremise1",
+                        "properties": {
+                            "addressPrefix": "155.73.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+
+},
+
+
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-img",
+                        "properties": {
+                            "addressPrefix": "10.45.4.0/28",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-shir",
+                        "properties": {
+                            "addressPrefix": "10.45.5.0/27",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    }
+                ]
+
+            }
+        }
+    ],
+    "outputs": {}
+}

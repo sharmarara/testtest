@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LocalVnet": {
+            "value": "BR-EUW-VNT-P-HUB"
+        },
+        "RemoteVnet": {
+            "value": "brs-euw-vnt-p-01"
+        },
+        "RemoteVnetResourceID": {
+            "value": "/subscriptions/2c9eacc5-e79a-4b5d-93fa-2565e94b9d0d/resourceGroups/brs-euw-rsg-p-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-p-01"
+        },
+        "location": {
+            "value": "West Europe"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "rgname": {
+        "type": "Array"
+      },
+      "rgLocation": {
+        "type": "string"
+      }
+      
+    },
+    "variables": {
+      
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Resources/resourceGroups",
+        "apiVersion": "2020-06-01",
+        "name": "[parameters('rgname')[copyIndex()]]",
+        "location": "[parameters('rgLocation')]",
+        "tags": {
+            "Application name":"NA",
+            "Managed by":"NA",
+            "IT Owner":"NA",
+            "Business Owner":"NA",
+            "Cost Center":"NA"
+                },
+        "properties": {},
+      
+       "copy": {  
+              "name": "rgcopy",
+              "count": "[length(parameters('rgname'))]"
+              
+          }
+      }
+      
+      
+    ],
+    "outputs": {}
+  }

@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string",
+            "defaultValue": "brseuwswtts01"
+        },
+        "osType": {
+            "type": "string",
+            "defaultValue": "Windows"
+        },
+        "artifactURI": {
+            "type": "string",
+            "defaultValue": "https://brheuwstopvmcse001.blob.core.windows.net/artifacts"
+        }
+    },
+    "variables": {},
+    "resources": [
+{
+        "name": "[concat(parameters('vmName'), '/InstallAgents')]",
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "condition": "[equals(parameters('osType'), 'Windows')]",
+        "apiVersion": "2019-07-01",
+        "location": "[resourceGroup().location]",
+        "tags": {
+            "displayName": "customScript1 for Windows VM"
+        },
+        "dependsOn": [],
+        "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.10",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+                "commandToExecute": "",
+                "fileUris": [
+                    "https://brheuwstopvmcse001.blob.core.windows.net/bootstrap/bootstrap.ps1","https://brheuwstopvmcse001.blob.core.windows.net/bootstrap/azcopy.exe"
+                ]
+            },
+            "protectedSettings": {
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -file bootstrap.ps1  -SourceURI ', parameters('artifactURI'))]"
+            }
+        }
+    }
+],
+    "outputs": {}
+}

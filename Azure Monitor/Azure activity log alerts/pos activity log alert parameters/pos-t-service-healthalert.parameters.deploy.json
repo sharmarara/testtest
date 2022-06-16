@@ -1,0 +1,19 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AlertName": {
+            "value": "Alert ! Service Health Notification"
+        },
+        "Actiongroup": {
+            "value": "/subscriptions/1a4cdfee-41eb-49dd-b7e9-c310d39c9b49/resourceGroups/pos-euw-rsg-t-monitor/providers/Microsoft.Insights/actiongroups/pos-euw-ag-t-amon-01"
+        },
+        "Alertdescription": {
+            "value": "Service Health Notification"
+        },
+        "Subscriptionid": {
+            "value": "/subscriptions/1a4cdfee-41eb-49dd-b7e9-c310d39c9b49"
+        }
+    
+    }
+}

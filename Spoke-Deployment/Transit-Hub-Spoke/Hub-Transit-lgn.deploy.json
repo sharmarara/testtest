@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "HubResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the hub network resouce group "
+            }
+        },
+        "Hublngname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the local gateway for hub"
+            }
+        },
+        "Hubgatewayaddress": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the hub gateway address"
+            }
+        },
+        "Hubvpngatewayname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the hub vpn gateway"
+            }
+        },
+        "Connection 2": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "Sharedkey": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('Hublngname')]",
+            "type": "Microsoft.Network/localNetworkGateways",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "localNetworkAddressSpace": {
+                    "addressPrefixes": [
+                        "10.1.0.0/16",
+                        "10.53.0.0/16",
+                        "10.60.0.0/25"
+                    ]
+                },
+                "gatewayIpAddress": "[parameters('Hubgatewayaddress')]"
+            }
+        },
+        {
+            "name": "[parameters('Connection 2')]",
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [                
+                "[resourceId('Microsoft.Network/localNetworkGateways', parameters('Hublngname'))]"
+            ],
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('Hubvpngatewayname'))]"
+                },
+                "localNetworkGateway2": {
+                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', parameters('Hublngname'))]"
+                },
+                "connectionType": "IPsec",
+                "routingWeight": 0,
+                "sharedKey": "[parameters('Sharedkey')]"
+            }
+        }
+    ],
+    "outputs": {}
+}

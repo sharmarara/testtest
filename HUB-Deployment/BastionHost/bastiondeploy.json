@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "vnet-name": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of new or existing vnet to which Azure Bastion should be deployed"
+        }
+      },
+      
+      "bastion-host-name": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of Azure Bastion resource"
+        }
+      },
+      "location": {
+        "type": "string",
+        "metadata": {
+          "description": "Azure region for Bastion and virtual network"
+        }
+      }
+    },
+    "variables": {
+      "public-ip-address-name": "brh-euw-pip-p-hub-bastion-01",
+      "bastion-subnet-name": "AzureBastionSubnet"
+      
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/publicIpAddresses",
+        "name": "[variables('public-ip-address-name')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "publicIPAllocationMethod": "Static"
+        }
+      },
+      
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/bastionHosts",
+        "name": "[parameters('bastion-host-name')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+         
+          "[resourceId('Microsoft.Network/publicIpAddresses', variables('public-ip-address-name'))]"
+        ],
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "IpConf",
+              "properties": {
+                "subnet": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnet-name'), variables('bastion-subnet-name'))]"
+                },
+                "publicIPAddress": {
+                  "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('public-ip-address-name'))]"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }

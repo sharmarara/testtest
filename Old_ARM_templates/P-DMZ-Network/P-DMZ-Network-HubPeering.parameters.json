@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "BR-EUW-VNT-P-DMZ"
+      },
+      "PeeredVnet": {
+       "value": "BR-EUW-VNT-P-HUB"
+      },
+      "PeeredVnetResourceID": {
+        "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/BR-EUW-RSG-P-HUB-NETWORK/providers/Microsoft.Network/virtualNetworks/BR-EUW-VNT-P-HUB"
+      },
+      "vnetPeeringRequied": {
+      "value": true     
+      },
+      "VnetAddressPrefix": {
+        "value": "10.47.0.0/16"
+      },
+      "GatewaySubnetPrefix": {
+        "value": "10.47.1.0/24"
+      },
+      "SubnetPrefix": {
+        "value": ["10.47.0.0/24"]
+      },
+      "SubnetName": {
+        "value": ["BR-EUW-SNT-P-APPDMZ1"]
+      },
+      "nsgName": {
+        "value": ["BR-EUW-SNT-P-APPDMZ1-NSG"]
+      },
+      "udrName":{
+        "value": ["BR-EUW-UDR-P-APPDMZ1"]
+      },
+      "Location": {
+        "value": "West Europe"
+      }
+    }
+  }

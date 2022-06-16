@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "pos-euw-vnt-t-01"
+      },
+      "VnetAddressPrefix": {
+        "value": "10.66.0.0/16"
+      },
+
+      "SubnetPrefix": {
+        "value": ["10.66.0.0/24","10.66.1.0/24","10.66.2.0/24","10.66.3.0/24","10.66.4.0/24"]
+      },
+      "SubnetName": {
+        "value": ["pos-euw-snt-t-feiaas","pos-euw-snt-t-app","pos-euw-snt-t-fepaas","pos-euw-snt-t-dbiaas","pos-euw-snt-t-dbpaas"]
+      },
+      "nsgName": {
+        "value": ["pos-euw-nsg-t-feiaas","pos-euw-nsg-t-app","pos-euw-nsg-t-fepaas","pos-euw-nsg-t-dbiaas","pos-euw-nsg-t-dbpaas"]
+      },
+      "udrName":{
+        "value": ["pos-euw-udr-t-feiaas","pos-euw-udr-t-app","pos-euw-udr-t-fepaas","pos-euw-udr-t-dbiaas","pos-euw-udr-t-dbpaas"]
+      },
+      "Location": {
+        "value": "west europe"
+      }
+    }
+  }

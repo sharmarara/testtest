@@ -1,0 +1,81 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "alertname": {
+            "type": "String",
+            "metadata": {
+                "description":"the name of the alert that is configured."
+            }
+        },
+        "loganalyticsworkspaceresourceid": {  
+            "type": "String",
+            "metadata": {
+                "description":"the log analytics workspace resource id"
+            }
+        },
+        "actionGroup": {            
+            "type": "String",
+            "metadata": {
+                "description": "The ID of the action group that is triggered when the alert is activated."
+            }
+        },
+        "heartbeatthreshold": {
+            "type": "string",
+            "metadata": {
+                "description": "the threshold for the heartbeat"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('alertname')]",
+            "location": "global",
+            "properties": {
+                "description": "Alert for Virtual Machine heartbeat",
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[parameters('loganalyticsworkspaceresourceid')]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT15M",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": "[parameters('heartbeatthreshold')]",
+                            "name": "Metric1",
+                            "metricNamespace": "Microsoft.OperationalInsights/workspaces",
+                            "metricName": "Heartbeat",
+                            "dimensions": [
+                                {
+                                    "name": "Computer",
+                                    "operator": "Include",
+                                    "values": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "operator": "LessThanOrEqual",
+                            "timeAggregation": "Count",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+                },
+                "autoMitigate": false,
+                "targetResourceType": "Microsoft.OperationalInsights/workspaces",
+                "targetResourceRegion": "West Europe",
+                "actions": [
+                    {
+                        "actionGroupId": "[parameters('actionGroup')]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        }
+    ]
+}

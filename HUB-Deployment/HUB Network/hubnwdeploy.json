@@ -1,0 +1,256 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "type": "string"
+      },
+
+      "VnetAddressPrefix": {
+        "type": "string"
+      },
+
+      "GatewaySubnetPrefix": {
+        "type": "string"
+      },
+	  "bastion-subnet-ip-prefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Bastion subnet IP prefix MUST be within vnet IP prefix address space"
+      }
+	  
+    },
+
+      "SubnetPrefix": {
+        "type": "array"
+      },
+
+      "SubnetName": {
+        "type": "array"
+      },
+      "nsgName": {
+        "type": "array"
+      },
+      "udrName": {
+        "type": "array"
+      },
+      "Location": {
+         "type": "string"
+        }
+    },
+    "variables": {
+	
+    "nsg-name": "brh-euw-nsg-p-hub-bastion"
+	},
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('nsgName')[copyIndex()]]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            "securityRules":[
+            {
+              "name": "Deny_All",
+              "properties": {
+                "description": "Deny Rule",
+                "protocol" : "*",
+                "sourcePortRange":"*",
+                "destinationPortRange":"*",
+                "sourceAddressPrefix":"*",
+                "destinationAddressPrefix":"*",
+                "access": "Deny",
+                "priority": 2000,
+                "direction": "Inbound"
+
+              }
+            }
+            ]
+            },
+        "copy": {
+              "name": "nsg-copy",
+              "count": "[length(parameters('nsgName'))]",
+              "mode": "Serial"
+                }
+     },
+     {
+      "type": "Microsoft.Authorization/locks",
+      "apiVersion": "2016-09-01",
+      "name": "Virtual-Network-Locks",
+      "scope":"[concat('Microsoft.Network/virtualNetworks/',parameters('VnetName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', parameters('VnetName'))]"
+      ],
+      "properties": {
+        "level": "CanNotDelete",
+        "notes": " Prevent Deleting Virtual Network"
+      }
+      },
+	 {
+      "apiVersion": "2019-11-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('nsg-name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "bastion-in-allow",
+            "properties": {
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "Internet",
+              "destinationPortRange": "443",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "bastion-control-in-allow",
+            "properties": {
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "GatewayManager",
+              "destinationPortRanges": [
+                "443",
+                "4443"
+              ],
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 120,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "bastion-in-deny",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 900,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "bastion-vnet-out-allow",
+            "properties": {
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationPortRanges": [
+                "22",
+                "3389"
+              ],
+              "destinationAddressPrefix": "VirtualNetwork",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "bastion-azure-out-allow",
+            "properties": {
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationPortRange": "443",
+              "destinationAddressPrefix": "AzureCloud",
+              "access": "Allow",
+              "priority": 120,
+              "direction": "Outbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2018-08-01",
+        "name": "[parameters('VnetName')]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            "addressSpace": {
+                "addressPrefixes": [
+                    "[parameters('VnetAddressPrefix')]"
+                ]
+            }
+        }
+    },
+    {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', parameters('SubnetName')[copyIndex()])]",
+        "dependsOn": [
+          "[parameters('VnetName')]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('SubnetPrefix')[copyIndex()]]",
+          
+          "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          }
+          
+        },
+        "copy": {
+            "name": "subnet-copy",
+            "count": "[length(parameters('SubnetName'))]",
+            "mode": "Serial"
+        }
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', 'GatewaySubnet')]",
+        "dependsOn": [
+          "[parameters('VnetName')]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('GatewaySubnetPrefix')]"
+        }
+      },
+	  {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+       "name": "[concat(parameters('VnetName'), '/', 'AzureBastionSubnet')]",
+        "dependsOn": [
+         "[parameters('VnetName')]",
+        "[variables('nsg-name')]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('bastion-subnet-ip-prefix')]",
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsg-name'))]"
+        }
+        }
+      },
+	  
+    
+         {
+            "name": "[parameters('udrName')[copyIndex()]]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2018-08-01",
+            "location": "[parameters('Location')]",
+            "tags": {},
+            "copy": {
+                     "name": "udr-copy",
+                     "count": "[length(parameters('udrName'))]"
+                    },
+            "properties": {
+            "disableBgpRoutePropagation": true
+                    }
+        
+          }
+          
+     
+],
+    "outputs": {}
+}

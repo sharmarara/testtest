@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "kvdemo1345"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "sku": {
+            "value": "Standard"
+        },
+        "accessPolicies": {
+            "value": []
+        },
+        "tenant": {
+            "value": "ce5330fc-da76-4db0-8b83-9dfdd963f09a"
+        },
+        "enabledForDeployment": {
+            "value": false
+        },
+        "enabledForTemplateDeployment": {
+            "value": true
+        },
+        "enabledForDiskEncryption": {
+            "value": false
+        },
+        "enableRbacAuthorization": {
+            "value": true
+        },
+        "enableSoftDelete": {
+            "value": true
+        },
+        "softDeleteRetentionInDays": {
+            "value": 90
+        },
+        "enablePurgeProtection": {
+            "value": true
+        },
+        "networkAcls": {
+            "value": {
+                "defaultAction": "deny",
+                "bypass": "AzureServices",
+                "ipRules": [],
+                "virtualNetworkRules": [{
+                    "id": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-t-01/subnets/brs-euw-snt-t-dna-01",
+                    "ignoreMissingVnetServiceEndpoint": false
+                }
+                ]
+            }
+        }
+    }
+}

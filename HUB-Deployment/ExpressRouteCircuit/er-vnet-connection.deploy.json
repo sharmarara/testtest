@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "erconnectionname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the connection between express route gateway and circuit"
+            }
+        },
+        "ervpngatewayname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the expressroute gateway"
+            }
+        },
+        "ercircuitname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the express route circuit"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('erconnectionname')]",
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways',parameters('ervpngatewayname'))]"
+                },
+                "peer": {
+                    "id": "[resourceId('Microsoft.Network/expressRouteCircuits',parameters('ercircuitname'))]"
+                },
+                "connectionType": "ExpressRoute"
+                
+            }
+        }
+    ],
+    "outputs": {}
+}

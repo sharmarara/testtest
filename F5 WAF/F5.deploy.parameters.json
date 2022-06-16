@@ -1,0 +1,78 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "9.3.0.0",
+    "parameters": {
+        "adminUsername": {
+            "value": "brhadminwaf"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminPasswordOrKey": {
+            "value": "null"
+        },
+        "dnsLabel": {
+            "value": "brheuwslphubwaf0"
+        },
+        "instanceType": {
+            "value": "Standard_DS2_v2"
+        },
+        "imageName": {
+            "value": "AllTwoBootLocations"
+        },
+        "bigIpVersion": {
+            "value": "15.1.200000"
+        },
+        "bigIpModules": {
+            "value": "ltm:nominal"
+        },
+        "licenseKey1": {
+            "value": "JTLEY-WRVEB-WJLID-GYSBL-EFWWRBK"
+        },
+        "licenseKey2": {
+            "value": "TKYTG-EIIDQ-VXLCX-KXTIF-XEXSYOF"
+        },
+        "vnetName": {
+            "value": "brh-euw-vnt-p-hub"
+        },
+        "vnetResourceGroupName": {
+            "value": "brh-euw-rsg-p-hub-network"
+        },
+        "mgmtSubnetName": {
+            "value": "brh-euw-snt-p-hub-waf-mgmt"
+        },
+        "mgmtIpAddressRangeStart": {
+            "value": "DYNAMIC"
+        },
+        "provisionPublicIP": {
+            "value": "No"
+        },
+        "declarationUrl": {
+            "value": "NOT_SPECIFIED"
+        },
+        "ntpServer": {
+            "value": "0.pool.ntp.org"
+        },
+        "timeZone": {
+            "value": "UTC"
+        },
+        "customImageUrn": {
+            "value": "OPTIONAL"
+        },
+        "customImage": {
+            "value": "OPTIONAL"
+        },
+        "restrictedSrcAddress": {
+            "value": "10.0.0.0/8"
+        },
+        "allowUsageAnalytics": {
+            "value": "Yes"
+        },
+        "allowPhoneHome": {
+            "value": "Yes"
+        },
+        "numberOfInstances": {
+            "value": 2
+        }
+    }
+}

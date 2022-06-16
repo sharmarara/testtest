@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName":{
+            "value": "brh-euw-kv-p-hub-mgmt-01"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "skuName": {
+            "value": "Standard"
+        
+        },
+       
+        "enabledForDeployment": {
+            "value": true
+        },
+        "enabledForTemplateDeployment": {
+            "value": true
+        },
+        "enabledForDiskEncryption": {
+            "value": false
+        },
+        "enableSoftDelete": {
+            "value": true
+        },
+        "softDeleteRetentionInDays": {
+            "value": 90
+        },
+        
+        "objectId":{
+            "value": "null"
+        }
+    }
+}

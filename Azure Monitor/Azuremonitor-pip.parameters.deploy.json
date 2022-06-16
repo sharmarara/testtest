@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AzmonitorPipname": {
+            "value": "brh-euw-pip-p-hub-amon-01"
+        },
+        "Azmonitorfrontendname": {
+            "value": "brh-euw-pip-p-hub-amon-01"
+        },
+        "ExisitingPublicIP": {
+            "value": "brh-euw-pip-p-hub-elb-01"
+        },
+        "FrontendIPname": {
+            "value": "brh-euw-pip-p-hub-elb-01"
+        },
+        "Resourcegroup2": {
+            "value": "brh-euw-rsg-p-hub-fwc"
+        },
+        "Exisitingloadbalacername": {
+            "value": "brh-euw-elb-p-hub-fwc"
+        },
+        "Resourcegroup1": {
+            "value": "brh-euw-rsg-p-hub-network"
+        }
+    }
+}

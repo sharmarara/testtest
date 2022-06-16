@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourcegroups/brh-euw-rsg-p-hub-monitor/providers/microsoft.operationalinsights/workspaces/brh-euw-la-p-hub-01"
+        },
+        "location": {
+            "value": "West Europe" 
+        },
+        "actionGroupId": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-monitor/providers/Microsoft.Insights/actiongroups/brh-euw-ag-p-hub-amon-01"
+        },
+        "alertname": {
+            "value": "Percent Free Space Available on Disk - Warning Alert" 
+        },
+        "isEnabled": {
+            "value": true
+        },
+        "windowSizeinminutes": {
+            "value": "15"
+        },
+        "evaluationFrequencyinminutes": {
+            "value": "5"
+        },
+        "alertSeverity": {
+            "value": 3
+        },
+        "triggeroperator": {
+            "value": "LessThanOrEqual" 
+        },
+        "metrictriggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "thresholdvalue": {
+            "value": "15" 
+        },
+        "metrictriggertype": {
+            "value": "Consecutive" 
+        }
+    }
+}

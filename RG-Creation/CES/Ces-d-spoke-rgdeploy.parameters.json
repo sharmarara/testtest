@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgname":{
+            "value": ["ces-euw-rsg-d-network", "ces-euw-rsg-d-diagsto", "ces-euw-rsg-d-rsv","ces-euw-rsg-d-monitor"]
+        },
+        "rgLocation":{
+            "value": "west europe"
+        }
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loganalyticsworkspacename": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the loganalytics workspace"
+            }
+        },
+        "Location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location of the workspace"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/','LinuxProcessor')]",
+            "type": "Microsoft.OperationalInsights/workspaces/dataSources",
+            "apiVersion": "2015-11-01-preview",
+            "location": "[parameters('Location')]",
+            "kind": "LinuxPerformanceObject",
+            "properties": {
+                "objectName": "Processor",
+                "instanceName": "*",
+                "intervalSeconds": 60,
+                "PerformanceCounters": [
+                    {
+                        "CounterName": "% Processor Time"
+                    }
+                ]
+
+            }
+
+        }
+    ],
+    "outputs": {}
+}

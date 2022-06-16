@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "cloudGuardVersion": {
+            "value": "R80.30 - Bring Your Own License"
+        },
+        "adminPassword": {
+            "value" :"null"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "vmName": {
+            "value": "brheuwclpfwc"
+        },
+        "vmpip":{
+            "value": "brh-euw-pip-p-hub-fwc0"
+        },
+        "vmSize": {
+            "value": "Standard_DS3_v2"
+        },
+        "sicKey": {
+            "value": "null"
+        },
+        "virtualNetworkName": {
+            "value": "brh-euw-vnt-p-hub"
+        },
+        "virtualNetworkAddressPrefixes": {
+            "value":"10.45.0.0/16"
+        },
+        "subnet1Name": {
+            "value": "brh-euw-snt-p-hub-cp-ext"
+        },
+        "subnet1Prefix": {
+            "value": "10.45.0.0/28"
+        },
+        "subnet1StartAddress": {
+            "value": "10.45.0.4"
+        },
+        "subnet2Name": {
+            "value": "brh-euw-snt-p-hub-cp-int"
+        },
+        "subnet2Prefix": {
+            "value": "10.45.0.16/28"
+        },
+        "subnet2StartAddress": {
+            "value": "10.45.0.20"
+        },
+        "vnetNewOrExisting": {
+            "value": "existing"
+        },
+        "virtualNetworkExistingRGName": {
+            "value": "brh-euw-rsg-p-hub-network"
+        },
+        "allowDownloadFromUploadToCheckPoint": {
+            "value": "true"
+        },
+        "additionalDiskSizeGB": {
+            "value": 0
+        },
+        "diskType": {
+            "value": "Standard_LRS"
+        },
+        "managedSystemAssigned": {
+            "value": "yes"
+        },
+        "sourceImageVhdUri": {
+            "value": "noCustomUri"
+        },
+        "availabilityOptions": {
+            "value": "Availability Zones"
+        }
+    }
+}

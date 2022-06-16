@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "test-vnet"
+      },
+      "VnetAddressPrefix": {
+        "value": "10.45.0.0/16"
+      },
+      "GatewaySubnetPrefix": {
+        "value": "10.45.0.192/27"
+      },
+      "SubnetPrefix": {
+        "value": ["10.45.0.0/28","10.45.0.16/28","10.45.0.32/28","10.45.0.48/28","10.45.0.64/28","10.45.0.80/28","10.45.1.0/24","10.45.0.96/28","10.45.0.112/28","10.45.0.128/26","10.45.2.0/24"]
+      },
+      "SubnetName": {
+        "value": ["BR-EUW-SNT-P-CP-EXT","BR-EUW-SNT-P-CP-INT","BR-EUW-SNT-P-JP-UNTRUST","BR-EUW-SNT-P-JP-TRUST","BR-EUW-SNT-P-JP-MGMT","BR-EUW-SNT-P-WAF-INT","BR-EUW-SNT-P-WAF-EXT","BR-EUW-SNT-P-WAFDNS-EXT","BR-EUW-SNT-P-WAFDNS-INT","BR-EUW-SNT-P-INFRA","BR-EUW-SNT-P-MGMT"]
+      },
+      "nsgName": {
+        "value": ["BR-EUW-NSG-P-CP-EXT","BR-EUW-NSG-P-CP-INT","BR-EUW-NSG-P-JP-UNTRUST","BR-EUW-NSG-P-JP-TRUST","BR-EUW-NSG-P-JP-MGMT","BR-EUW-NSG-P-WAF-INT","BR-EUW-NSG-P-WAF-EXT","BR-EUW-NSG-P-WAFDNS-EXT","BR-EUW-NSG-P-WAFDNS-INT","BR-EUW-NSG-P-INFRA","BR-EUW-NSG-P-MGMT"]
+      },
+      "udrName":{
+        "value": ["BR-EUW-UDR-P-INFRA","BR-EUW-UDR-P-MGMT"]
+      },
+      "Location": {
+        "value": "west india"
+      }
+    }
+  }

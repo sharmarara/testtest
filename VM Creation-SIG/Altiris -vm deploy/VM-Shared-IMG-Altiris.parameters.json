@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineAdminUserName": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-kv/providers/Microsoft.KeyVault/vaults/brh-euw-kv-p-hub-mgmt-01"
+                },
+                "secretName": "vmadminusername"
+            }
+        },
+        "virtualMachineAdminPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-kv/providers/Microsoft.KeyVault/vaults/brh-euw-kv-p-hub-mgmt-01"
+                },
+                "secretName": "vmadminpassword"
+            }
+        },
+        "VirtualMachineName": {
+            "value": ["brseuwswtwin01"]
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2s_v4"
+        },
+        "noOfDataDisk": {
+            "value": 1
+        },
+        "dataDiskSize": {
+            "value": 256
+        },
+        "SharedImageGalleryResourceGroupName": {
+            "value": "brh-euw-rsg-p-hub-goldenimage"
+        },
+        "galleryName": {
+            "value": "brheuwsigp01"
+        },
+        "galleryImageDefinitionName": {
+            "value": "brh-euw-sigvm-p-avd-w10"
+        },
+        "galleryImageVersionName": {
+            "value": "2022.02.15"
+        },
+        "EnableAcceleratedNetworking": {
+            "value": false
+        },
+        "storageAccountName": {
+            "value": "brseuwstoddiagacct01"
+        },
+        "storageAccountResourceGroupName": {
+            "value": "brs-euw-rsg-d-diagsto"
+        },
+        "existingVirtualNetworkName": {
+            "value": "brs-euw-vnt-d-01"
+        },
+        "existingVirtualNetworkResourceGroup": {
+            "value": "brs-euw-rsg-d-network"
+        },
+        "Infra-SubnetName": {
+            "value": "brs-euw-snt-d-feiaas"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "domainJoinUserName": {
+            "value": "mignetwork\\altirisimport"
+        },
+        "domainFQDN": {
+            "value": "mignetwork.net"
+        },
+        "domainJoinUserPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-kv/providers/Microsoft.KeyVault/vaults/brh-euw-kv-p-hub-mgmt-01"
+                },
+                "secretName": "DomainJoinPassword"
+            }
+        },
+        "Ostype": {
+            "value": "Windows"
+        }
+    }
+}

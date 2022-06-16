@@ -1,0 +1,142 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "type": "string"
+      },
+      
+      "PeeredVnet": {
+        "type": "string"
+      },
+
+      "PeeredVnetResourceID": {
+        "type": "string"
+      },
+      
+      "vnetPeeringRequied": {
+        "type": "bool",
+        "defaultValue": true        
+      },
+      
+      "VnetAddressPrefix": {
+        "type": "string"
+      },
+      
+      "SubnetPrefix": {
+        "type": "array"
+      },
+
+      "SubnetName": {
+        "type": "array"
+      },
+      "nsgName": {
+        "type": "array"
+      },
+      "udrName": {
+        "type": "array"
+      },
+      "Location": {
+         "type": "string"
+        }
+    },
+    "variables": {
+      "vnetAtoVnetBpeering":"[concat(parameters('VnetName'),'-To-',parameters('PeeredVnet'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('nsgName')[copyIndex()]]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            },
+        "copy": {
+              "name": "nsg-copy",
+              "count": "[length(parameters('nsgName'))]",
+              "mode": "Serial"
+                }
+     },
+    {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2018-08-01",
+        "name": "[parameters('VnetName')]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            "addressSpace": {
+                "addressPrefixes": [
+                    "[parameters('VnetAddressPrefix')]"
+                ]
+            }
+        },
+        "resources": [
+                {   
+                    "condition": "[parameters('vnetPeeringRequied')]",
+                    "apiVersion": "2018-06-01",
+                    "type": "virtualNetworkPeerings",
+                    "name": "[variables('vnetAtoVnetBpeering')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Network/virtualNetworks/', parameters('VnetName'))]"
+                    ],
+                    "comments": "This is the peering from vNet 1 to vNet 2",
+                    "properties": {
+                       "allowVirtualNetworkAccess": true,
+                       "allowForwardedTraffic": false,
+                       "allowGatewayTransit": false,
+                       "useRemoteGateways": false,
+                        "remoteVirtualNetwork": {
+                            "id": "[parameters('PeeredVnetResourceID')]"
+                        }
+                    }
+                }
+            ]
+    },
+
+    {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', parameters('SubnetName')[copyIndex()])]",
+        "dependsOn": [
+          "[parameters('VnetName')]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]",
+          "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('SubnetPrefix')[copyIndex()]]",
+          "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          },
+
+          "routeTable": {
+            "id": "[resourceId('Microsoft.Network/routeTables', parameters('udrName')[copyIndex()])]"
+          }
+        },
+        "copy": {
+            "name": "subnet-copy",
+            "count": "[length(parameters('SubnetName'))]",
+            "mode": "Serial"
+        }
+      },
+    
+         {
+            "name": "[parameters('udrName')[copyIndex()]]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2018-08-01",
+            "location": "[parameters('Location')]",
+            "tags": {},
+            "copy": {
+                     "name": "udr-copy",
+                     "count": "[length(parameters('udrName'))]",
+                     "mode": "Serial"
+                    },
+            "properties": {
+            "disableBgpRoutePropagation": true
+                    }
+        
+          }
+     
+],
+    "outputs": {}
+}

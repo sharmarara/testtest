@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sharedimagegalleryname": {
+            "value": "brheuwsigp01"
+        },
+        "brheuwcwimgw10_imageid": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/BRH-EUW-RSG-P-HUB-GOLDENIMAGE/providers/Microsoft.Compute/images/brheuwcwimgw10"
+        },
+        "galleryimagedefinition": {
+            "value": "brh-euw-sigvm-p-hub-w10" 
+        },
+        "imageversion": {
+            "value": "0.0.1" 
+        }
+    }
+}

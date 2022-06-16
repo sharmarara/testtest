@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "privateEndpointName": {
+            "value": "brs-euw-pep-brs-euw-p-dna-02-blob"
+        },
+        "privateLinkResource": {
+            "value": "/subscriptions/2c9eacc5-e79a-4b5d-93fa-2565e94b9d0d/resourceGroups/brs-euw-rsg-p-dna/providers/Microsoft.Storage/storageAccounts/brseuwstopdna02"
+        },
+        "targetSubResource": {
+            "value": [
+                "blob"
+            ]
+        },
+        "requestMessage": {
+            "value": ""
+        },
+        "subnet": {
+            "value": "/subscriptions/2c9eacc5-e79a-4b5d-93fa-2565e94b9d0d/resourceGroups/brs-euw-rsg-p-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-p-01/subnets/brs-euw-snt-p-dna-01"
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/2c9eacc5-e79a-4b5d-93fa-2565e94b9d0d/resourceGroups/brs-euw-rsg-p-network/providers/Microsoft.Network/virtualNetworks/brs-euw-vnt-p-01"
+        },
+        "subnetDeploymentName": {
+            "value": "UpdateSubnetDeployment-20220222101202"
+        },
+        "applicationSecurityGroupsDeployment": {
+            "value": "AddNewApplicationSecurityGroupsDeployment-20220222101202"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "brs-euw-rsg-p-network"
+        },
+        "applicationSecurityGroups": {
+            "value": []
+        }
+    }
+}

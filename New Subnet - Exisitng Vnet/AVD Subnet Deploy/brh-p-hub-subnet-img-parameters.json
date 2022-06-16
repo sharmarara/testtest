@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "value": "brh-euw-vnt-p-hub"
+        },
+        "subnetPrefix": {
+            "value": [
+                "10.45.4.0/28"
+            ]
+        },
+        "subnetName": {
+            "value": [
+                "brh-euw-snt-p-hub-img"
+            ]
+        },
+        "nsgName": {
+            "value": [
+                "brh-euw-nsg-p-hub-img"
+            ]
+        },
+        "udrName": {
+            "value": [
+                "brh-euw-udr-p-hub-img"
+            ]
+        },
+        "location": {
+            "value": "west europe"
+        }
+    }
+}

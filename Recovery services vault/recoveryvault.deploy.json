@@ -1,0 +1,130 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Recoveryvaultname": {
+            "type": "string",            
+            "metadata": {
+                "description": "The name of the recovery services vault"
+            }
+        },
+        "Recoveryvaultlocation": {
+            "type": "string",            
+            "metadata": {
+                "description": "The location of the recovery vault"
+            }
+        },
+        "Backuppolicyname": {
+            "type": "string",            
+            "metadata": {
+                "description": "The name of the backup policy "
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('Recoveryvaultname')]",
+            "type": "Microsoft.RecoveryServices/vaults",
+            "apiVersion": "2018-01-10",
+            "location": "[parameters('Recoveryvaultlocation')]",
+            "sku": {
+                "name": "RS0",
+                "tier": "Standard"
+            },
+            "properties": {
+
+            }
+        },
+        {
+            "name": "[concat(parameters('Recoveryvaultname'),'/',parameters('Backuppolicyname'))]",
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('Recoveryvaultname'))]"
+            ],
+            "apiVersion": "2016-12-01",
+            "location": "[parameters('Recoveryvaultlocation')]",
+
+            "properties": {
+                "backupManagementType": "AzureIaasVM",
+                "instantRPDetails": {},
+                "schedulePolicy": {
+                    "schedulePolicyType": "SimpleSchedulePolicy",
+                    "scheduleRunFrequency": "Daily",
+                    "scheduleRunTimes": [
+                        "2021-01-15T21:00:00Z"
+                    ],
+                    "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                    "retentionPolicyType": "LongTermRetentionPolicy",
+                    "dailySchedule": {
+                        "retentionTimes": [
+                            "2021-01-15T21:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 28,
+                            "durationType": "Days"
+                        }
+                    },
+                    "weeklySchedule": {
+                        "daysOfTheWeek": [
+                            "Friday"
+                        ],
+                        "retentionTimes": [
+                            "2021-01-15T21:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 4,
+                            "durationType": "Weeks"
+                        }
+                    },
+                    "monthlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Friday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2021-01-15T21:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 12,
+                            "durationType": "Months"
+                        }
+                    },
+                    "yearlySchedule": {
+                        "retentionScheduleFormatType": "Weekly",
+                        "monthsOfYear": [
+                            "January"
+                        ],
+                        "retentionScheduleWeekly": {
+                            "daysOfTheWeek": [
+                                "Friday"
+                            ],
+                            "weeksOfTheMonth": [
+                                "First"
+                            ]
+                        },
+                        "retentionTimes": [
+                            "2021-01-15T21:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 99,
+                            "durationType": "Years"
+                        }
+                    }
+                },
+                "instantRpRetentionRangeInDays": 5,
+                "timeZone": "Romance Standard Time",
+                "protectedItemsCount": 0
+            }
+        }
+    ],
+    "outputs": {}
+}

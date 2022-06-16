@@ -1,0 +1,150 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource ID of the Log Analytics workspace."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for the alert. Must be the same location as the workspace."
+            }
+        },
+        "actionGroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "The ID of the action group that is triggered when the alert is activated."
+            }
+        },
+        "alertname": {
+            "type": "string",
+            "metadata": {
+                "description": "the name of the alert"
+            }
+        },
+        "isEnabled": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Specifies whether the alert is enabled"
+            }
+        },
+        "windowSizeinminutes": {
+            "type": "string",
+            "defaultValue": "5",
+
+            "metadata": {
+                "description": "Period of time used to monitor alert activity based on the threshold. Must be between one minute and one day."
+            }
+        },
+        "evaluationFrequencyinminutes": {
+            "type": "string",
+            "defaultValue": "5",
+            "metadata": {
+                "description": "how often the metric alert is evaluated"
+            }
+        },
+        "alertSeverity": {
+            "type": "int",
+            "defaultValue": 3,
+            "allowedValues": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "metadata": {
+                "description": "Severity of alert {0,1,2,3,4}"
+            }
+        },
+        "triggeroperator": {
+            "type": "string",
+            "allowedValues": [
+                "Equals",
+                "NotEquals",
+                "GreaterThan",
+                "GreaterThanOrEqual",
+                "LessThan",
+                "LessThanOrEqual"
+            ],
+            "metadata": {
+                "description": "threshold trigger Operator comparing the current value with the threshold value."
+            }
+        },
+        "metrictriggeroperator": {
+            "type": "string",
+            "allowedValues": [
+                "Equal",                
+                "GreaterThan",
+                "GreaterThanOrEqual",
+                "LessThan",
+                "LessThanOrEqual"
+            ],
+            "metadata": {
+                "description": "Metric trigger operator comparing the current value with the threshold value."
+            }
+        },
+        "thresholdvalue": {
+            "type": "string",
+            "metadata": {
+                "description": "The threshold value at which the alert is activated."
+            }
+        },
+        "metrictriggertype": {
+            "type": "string",
+            "defaultValue": "Consecutive",
+            "allowedValues": [
+                "Consecutive",
+                "Total"
+            ],
+            "metadata": {
+                "description": "The threshold value at which the alert is activated."
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Insights/scheduledQueryRules",
+            "name": "[parameters('alertname')]",
+            "apiVersion": "2018-04-16",
+            "location": "[parameters('location')]",
+            "properties": {
+                "description": "[parameters('alertname')]",
+                "enabled": "[parameters('isEnabled')]",
+                "source": {
+                    "query": "Perf | where ObjectName==\"Memory\" and (CounterName==\"% Committed Bytes In Use\" or CounterName==\"% Used Memory\")  | summarize AggregatedValue =avg(CounterValue)  by bin(TimeGenerated, 5m), Computer, CounterPath",
+                    "dataSourceId": "[parameters('sourceId')]",
+                    "queryType": "ResultCount"
+                },
+                "schedule": {
+                    "frequencyInMinutes": "[parameters('evaluationFrequencyinminutes')]",
+                    "timeWindowInMinutes": "[parameters('windowSizeinminutes')]"
+                },
+                "action": {
+                    "odata.type": "Microsoft.WindowsAzure.Management.Monitoring.Alerts.Models.Microsoft.AppInsights.Nexus.DataContracts.Resources.ScheduledQueryRules.AlertingAction",
+                    "severity": "[parameters('alertSeverity')]",
+                    "aznsAction": {
+                        "actionGroup":  "[array(parameters('actionGroupId'))]"
+                    },
+                    "trigger": {
+                        "thresholdOperator": "[parameters('triggeroperator')]",
+                        "threshold": "[parameters('thresholdvalue')]",
+                        "metricTrigger": {
+                            "thresholdOperator": "[parameters('metrictriggeroperator')]",
+                            "threshold": 0,
+                            "metricTriggerType": "[parameters('metrictriggertype')]",
+                            "metricColumn": "computer"
+
+                        }
+                    }
+                }
+            }
+        }
+
+    ]
+}

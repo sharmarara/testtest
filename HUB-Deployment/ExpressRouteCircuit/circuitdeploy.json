@@ -1,0 +1,161 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "circuitName": {
+            "type": "string",
+            "metadata": {
+                "description": "This is the name of the ExpressRoute circuit"
+            }
+        },
+        "portType": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "This is the port type of the ExpressRoute circuit. True means provider port. False means direct."
+            }
+        },
+        "createType": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "This is the create type of the ExpressRoute circuit. True means create new. False means import."
+            }
+        },
+        "serviceKey": {
+            "type": "securestring",
+            "defaultValue": "nodeploy",
+            "metadata": {
+                "description": "This is the service key of the classic ExpressRoute you want to import."
+            }
+        },
+        "serviceProviderName": {
+            "type": "string",
+            "defaultValue": "nodeploy",
+            "metadata": {
+                "description": "This is the name of the ExpressRoute Service Provider. It must exactly match one of the Service Providers from List ExpressRoute Service Providers API call."
+            }
+        },
+        "peeringLocation": {
+            "type": "string",
+            "defaultValue": "nodeploy",
+            "metadata": {
+                "description": "This is the name of the peering location and not the ARM resource location. It must exactly match one of the available peering locations from List ExpressRoute Service Providers API call."
+            }
+        },
+        "expressRoutePort": {
+            "type": "object",
+            "metadata": {
+                "description": "This is the name of the ExpressRoute Port. It must exactly match one of the Direct Ports from List ExpressRoute Ports API call"
+            }
+        },
+        "bandwidthInGbps": {
+            "type": "int",
+            "defaultValue": 0
+        },
+        "bandwidthInMbps": {
+            "type": "int",
+            "defaultValue": 0,
+            "metadata": {
+                "description": "This is the bandwidth in Mbps of the circuit being created. It must exactly match one of the available bandwidth offers List ExpressRoute Service Providers API call."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "West US",
+            "metadata": {
+                "description": "Location where Circuit resource would be created."
+            }
+        },
+        "sku_tier": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Local",
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "Chosen SKU Tier of ExpressRoute circuit. Choose from Premium or Standard SKU tiers."
+            }
+        },
+        "sku_family": {
+            "type": "string",
+            "defaultValue": "MeteredData",
+            "allowedValues": [
+                "MeteredData",
+                "UnlimitedData"
+            ],
+            "metadata": {
+                "description": "Chosen SKU family of ExpressRoute circuit. Choose from MeteredData or UnlimitedData SKU families."
+            }
+        },
+        "allowClassicOperations": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Allow the circuit to interact with classic (RDFE) resources"
+            }
+        },
+        "tagsByResource": {
+            "type": "object",
+            "defaultValue": {},
+            "metadata": {
+                "description": "Optional tags provided by the user via createUiDefinition.json"
+            }
+        }
+    },
+    "resources": [
+        {
+            "condition": "[and(parameters('portType'), parameters('createType'))]",
+            "apiVersion": "2019-02-01",
+            "type": "Microsoft.Network/expressRouteCircuits",
+            "name": "[if(and(parameters('portType'), parameters('createType')), parameters('circuitName'), 'nodeploy0')]",
+            "location": "[parameters('location')]",
+            "tags": "[ if(contains(parameters('tagsByResource'), 'Microsoft.Network/expressRouteCircuits'), parameters('tagsByResource')['Microsoft.Network/expressRouteCircuits'], json('{}')) ]",
+            "sku": {
+                "name": "[concat(parameters('sku_tier'),'_', parameters('sku_family'))]",
+                "tier": "[parameters('sku_tier')]",
+                "family": "[parameters('sku_family')]"
+            },
+            "properties": {
+                "serviceProviderProperties": {
+                    "serviceProviderName": "[parameters('serviceProviderName')]",
+                    "peeringLocation": "[parameters('peeringLocation')]",
+                    "bandwidthInMbps": "[parameters('bandwidthInMbps')]"
+                },
+                "allowClassicOperations": "[parameters('allowClassicOperations')]"
+            }
+        },
+        {
+            "condition": "[and(parameters('portType'), not(parameters('createType')))]",
+            "apiVersion": "2019-02-01",
+            "type": "Microsoft.Network/expressRouteCircuits",
+            "name": "[if(and(parameters('portType'), not(parameters('createType'))), parameters('circuitName'), 'nodeploy1')]",
+            "location": "[parameters('location')]",
+            "tags": "[ if(contains(parameters('tagsByResource'), 'Microsoft.Network/expressRouteCircuits'), parameters('tagsByResource')['Microsoft.Network/expressRouteCircuits'], json('{}')) ]",
+            "properties": {
+                "serviceKey": "[parameters('serviceKey')]"
+            }
+        },
+        {
+            "condition": "[not(parameters('portType'))]",
+            "apiVersion": "2019-02-01",
+            "type": "Microsoft.Network/expressRouteCircuits",
+            "name": "[if(not(parameters('portType')), parameters('circuitName'), 'nodeploy2')]",
+            "location": "[parameters('location')]",
+            "tags": "[ if(contains(parameters('tagsByResource'), 'Microsoft.Network/expressRouteCircuits'), parameters('tagsByResource')['Microsoft.Network/expressRouteCircuits'], json('{}')) ]",
+            "sku": {
+                "name": "[concat(parameters('sku_tier'),'_', parameters('sku_family'))]",
+                "tier": "[parameters('sku_tier')]",
+                "family": "[parameters('sku_family')]"
+            },
+            "properties": {
+                "expressRoutePort": {
+                    "id": "[parameters('expressRoutePort').id]"
+                },
+                "bandwidthInGbps": "[parameters('bandwidthInGbps')]"
+            }
+        }
+    ]
+}

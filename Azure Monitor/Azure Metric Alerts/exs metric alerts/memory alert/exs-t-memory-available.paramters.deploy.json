@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+            "value": "/subscriptions/d48fb55b-7069-4008-ae66-bcdefd81a8d6/resourcegroups/exs-euw-rsg-t-monitor/providers/microsoft.operationalinsights/workspaces/exs-euw-la-t-spoke-01"
+        },
+        "location": {
+            "value": "West Europe" 
+        },
+        "actionGroupId": {
+            "value": "/subscriptions/d48fb55b-7069-4008-ae66-bcdefd81a8d6/resourceGroups/exs-euw-rsg-t-monitor/providers/microsoft.insights/actionGroups/exs-euw-ag-t-amon-01"
+        },
+        "alertname": {
+            "value": "Memory Usgae is High - Warning Alert" 
+        },
+        "isEnabled": {
+            "value": true
+        },
+        "windowSizeinminutes": {
+            "value": "15"
+        },
+        "evaluationFrequencyinminutes": {
+            "value": "5"
+        },
+        "alertSeverity": {
+            "value": 3
+        },
+        "triggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "metrictriggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "thresholdvalue": {
+            "value": "85" 
+        },
+        "metrictriggertype": {
+            "value": "Consecutive" 
+        }
+    }
+}

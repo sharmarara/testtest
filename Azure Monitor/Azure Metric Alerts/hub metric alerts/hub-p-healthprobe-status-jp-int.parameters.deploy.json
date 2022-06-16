@@ -1,0 +1,22 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadbalanceralertname": {
+            "value": "The load balancer heath probe status Juniper ilb  - Warning Alert"
+        },
+        "alertdescription": {
+            "value": "The status of the health probe for the load balancer"
+        },
+        "loadbalancerresouce-id": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-fwj/providers/Microsoft.Network/loadBalancers/brh-euw-ilb-p-hub-fwj"
+        },
+        "actiongroupid": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-monitor/providers/Microsoft.Insights/actiongroups/brh-euw-ag-p-hub-amon-01"
+        },
+        "region": {
+            "value": "West Europe"
+
+        }
+    }
+}

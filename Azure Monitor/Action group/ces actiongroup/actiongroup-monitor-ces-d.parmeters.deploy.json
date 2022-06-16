@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "actionGroupName": {
+            "value": "ces-euw-ag-d-amon-01"
+        },
+        "actionGroupShortName": {
+            "value": "ces-euw-d-01"
+        },
+        "WebhookserviceUri": {
+            "value": "https://azuremonitor.borealisgroup.com"
+        },
+        "Webhookname": {
+            "value": "Azure Webhook ces"
+        }
+    }
+}

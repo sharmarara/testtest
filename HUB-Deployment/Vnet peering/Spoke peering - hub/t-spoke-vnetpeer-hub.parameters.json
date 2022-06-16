@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SpokeVnet" :{ 
+            "value": "brs-euw-vnt-t-01"
+
+        },
+        "SpokeVnetPrefix":{ 
+            "value": "10.48.0.0/16"
+        },
+        "SpokeSubsId":{
+            "value": "916cea10-da09-4458-9969-54db1d71975f"
+        },
+
+        "SpokeVnetRG":{ 
+            "value": "brs-euw-rsg-t-network"
+        }
+    }
+}

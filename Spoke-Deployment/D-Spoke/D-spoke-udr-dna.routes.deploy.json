@@ -1,0 +1,291 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {
+        "Prodmtmroutetable": "brs-euw-udr-d-dna-01",
+        "Prodecoroutetable": "brs-euw-udr-d-dna-02",
+        "Proddymroutetable": "brs-euw-udr-d-dna-03"
+    },
+    "resources": [
+        {
+            "name": "[variables('Prodmtmroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-01-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('Prodecoroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-Ecoplast-database",
+                        "properties": {
+                            "addressPrefix": "1.1.1.242/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-02-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('Proddymroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-Ecoplast-database",
+                        "properties": {
+                            "addressPrefix": "1.1.1.242/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-t-01",
+                        "properties": {
+                            "addressPrefix": "10.48.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-p-01",
+                        "properties": {
+                            "addressPrefix": "10.46.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brs-euw-vnt-u-01",
+                        "properties": {
+                            "addressPrefix": "10.52.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-onpremise",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/8",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-d-dna-03-to-brh-euw-udr-p-hub-gw",
+                        "properties": {
+                            "addressPrefix": "10.45.0.96/27",
+                            "nextHopType": "None"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}

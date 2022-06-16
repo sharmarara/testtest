@@ -1,0 +1,124 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AzmonitorPipname": {
+            "type": "string",
+            "defaultValue": "brh-euw-pip-p-hub-amon-01",
+            "metadata": {
+                "description": "Public ip name for az monitor integration"
+            }
+        },
+        "Azmonitorfrontendname": {
+            "type": "string",
+            "defaultValue": "brh-euw-pip-p-hub-amon-01",
+            "metadata": {
+                "description": "Public ip name for az monitor integration"
+            }
+        },
+        "ExisitingPublicIP": {
+            "type": "string",
+            "defaultValue": "brh-euw-pip-p-hub-elb-01",
+            "metadata": {
+                "description": "Exisiting Public IP name of External loadbalancer"
+            }
+        },
+        "FrontendIPname": {
+            "type": "string",
+            "defaultValue": "brh-euw-pip-p-hub-elb-01",
+            "metadata": {
+                "description": "Exisiting public IP name of External loadbalancer"
+            }
+        },
+        "Resourcegroup2": {
+            "type": "string",
+            "defaultValue": "brh-euw-rsg-p-hub-fwc",
+            "metadata": {
+                "description": "Resource group of the external loadbalancer"
+            }
+        },
+        "Exisitingloadbalacername": {
+            "type": "string",
+            "defaultValue": "brh-euw-elb-p-hub-fwc",
+            "metadata": {
+                "description": "Name of the exisiting load balancer"
+            }
+        },
+        "Resourcegroup1": {
+            "type": "string",
+            "defaultValue": "brh-euw-rsg-p-hub-network",
+            "metadata": {
+                "description": "Resource group name where the public IP will be deployed"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+
+        {
+            "name": "[parameters('AzmonitorPipname')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+
+        {
+            "name": "nestedDeployment1",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('Resourcegroup2')]",
+            "apiVersion": "2020-10-01",
+            "dependsOn": [
+                "[resourceId(parameters('Resourcegroup1'),'Microsoft.Network/publicIPAddresses', parameters('AzmonitorPipname'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "variables": {},
+                    "resources": [
+                        {
+                            "name": "[parameters('Exisitingloadbalacername')]",
+                            "type": "Microsoft.Network/loadBalancers",
+                            "apiVersion": "2019-11-01",
+                            "location": "West Europe",
+                            "sku": {
+                                "name": "Standard"
+                            },
+                            "properties": {
+                                "frontendIPConfigurations": [
+                                    {
+                                        "name": "[parameters('FrontendIPname')]",
+                                        "properties": {
+                                            "publicIPAddress": {
+                                                "id": "[resourceId(parameters('Resourcegroup2'),'Microsoft.Network/publicIPAddresses', parameters('ExisitingPublicIP'))]"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "[parameters('Azmonitorfrontendname')]",
+                                        "properties": {
+                                            "publicIPAddress": {
+                                                "id": "[resourceId(parameters('Resourcegroup1'),'Microsoft.Network/publicIPAddresses',parameters('AzmonitorPipname'))]"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "outputs": {}
+                }
+            }
+        }
+
+    ],
+    "outputs": {}
+}

@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadbalanceralertname": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the loadbalancer alert"
+            }
+        },
+        "alertdescription": {
+            "type": "string",
+            "metadata": {
+                "description": "Description of the alert"
+            }
+        },
+        "loadbalancerresouce-id": {            
+            "type": "string",
+            "metadata": {
+                "description":"The resource id of the loadbalancers being monitored"
+            }
+        },
+        "actiongroupid": { 
+            "type": "String"
+        },
+        "region": {
+            "type": "string",
+            "metadata": {
+                "description": "the location of the loadbalancers"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('loadbalanceralertname')]",
+            "location": "global",
+            "properties": {
+                "description": "[parameters('alertdescription')]",
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[parameters('loadbalancerresouce-id')]"                    
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT15M",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": 50,
+                            "name": "Healthstatus",
+                            "metricNamespace": "Microsoft.Network/loadBalancers",
+                            "metricName": "DipAvailability",
+                            "operator": "LessThanOrEqual",
+                            "timeAggregation": "Average",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+                },
+                "autoMitigate": false,
+                "targetResourceType": "Microsoft.Network/loadBalancers",
+                "targetResourceRegion": "[parameters('region')]",
+                "actions": [
+                    {
+                        "actionGroupId": "[parameters('actiongroupid')]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        }
+    ]
+}

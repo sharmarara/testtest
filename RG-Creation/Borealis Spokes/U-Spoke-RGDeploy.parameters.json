@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgname":{
+            "value": ["brs-euw-rsg-u-network", "brs-euw-rsg-u-diagsto","brs-euw-rsg-u-rsv"]
+        },
+        "rgLocation":{
+            "value": "west europe"
+        }
+    }
+}

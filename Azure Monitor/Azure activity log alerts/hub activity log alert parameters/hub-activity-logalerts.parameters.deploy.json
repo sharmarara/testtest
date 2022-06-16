@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "activitylogalertenabled": {
+            "value": true
+        },
+        "actiongroupresourceid": {
+            "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-monitor/providers/microsoft.insights/actiongroups/brh-euw-ag-p-hub-amon-01"
+        }
+    }
+}

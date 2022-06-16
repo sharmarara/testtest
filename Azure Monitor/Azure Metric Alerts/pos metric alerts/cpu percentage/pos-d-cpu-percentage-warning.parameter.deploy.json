@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sourceId": {
+            "value": "/subscriptions/6e726a8e-364d-4781-a8ff-2b6d734eded2/resourcegroups/pos-euw-rsg-d-monitor/providers/microsoft.operationalinsights/workspaces/pos-euw-la-d-spoke-01"
+        },
+        "location": {
+            "value": "West Europe" 
+        },
+        "actionGroupId": {
+            "value": "/subscriptions/6e726a8e-364d-4781-a8ff-2b6d734eded2/resourceGroups/pos-euw-rsg-d-monitor/providers/Microsoft.Insights/actiongroups/pos-euw-ag-d-amon-01"
+        },
+        "alertname": {
+            "value": "CPU Usgae is High - Warning Alert" 
+        },
+        "isEnabled": {
+            "value": true
+        },
+        "windowSizeinminutes": {
+            "value": "15"
+        },
+        "evaluationFrequencyinminutes": {
+            "value": "5"
+        },
+        "alertSeverity": {
+            "value": 3
+        },
+        "triggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "metrictriggeroperator": {
+            "value": "GreaterThan" 
+        },
+        "thresholdvalue": {
+            "value": "85" 
+        },
+        "metrictriggertype": {
+            "value": "Consecutive" 
+        }
+    }
+}

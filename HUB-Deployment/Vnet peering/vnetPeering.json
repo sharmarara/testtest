@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "LocalVnet": {
+        "type": "string"
+      },
+      
+      "RemoteVnet": {
+        "type": "string"
+      },
+
+      "RemoteVnetResourceID": {
+        "type": "string"
+      },
+
+      "location": {
+        "type": "string",
+        "defaultValue": "West Europe"
+      }
+    },
+
+    "variables": { 
+        "vnetAtoVnetBpeering":"[concat(parameters('LocalVnet'),'-To-',parameters('RemoteVnet'))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-11-01",
+        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "name": "[concat(parameters('LocalVnet'),'/',variables('vnetAtoVnetBpeering'))]",
+        "location": "[parameters('location')]",
+        "properties": {
+          "allowVirtualNetworkAccess": true,
+          "allowForwardedTraffic": false,
+          "allowGatewayTransit": false,
+          "useRemoteGateways": false,
+          "remoteVirtualNetwork": {
+            "id": "[parameters('RemoteVnetResourceID')]"
+          }
+        }
+       }
+    ]
+  }

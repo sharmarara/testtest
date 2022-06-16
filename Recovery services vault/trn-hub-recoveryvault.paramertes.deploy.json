@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Recoveryvaultname": {
+            "value": "brh-trn-euw-rsv-hub-01"
+        },
+        "Backuppolicyname": {
+            "value": "brh-trn-euw-bck-hub-01"            
+        },
+        "Recoveryvaultlocation": {
+            "value": "West Europe"
+        }
+    }
+}

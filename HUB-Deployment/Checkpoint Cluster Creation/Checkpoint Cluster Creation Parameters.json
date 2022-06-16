@@ -1,0 +1,117 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "cloudGuardVersion": {
+            "value": "R81.10 - Bring Your Own License"
+        },
+        "adminPassword": {
+            "value": "kLdxspd*4CkJ"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "vmName": {
+            "value": "Brheuwclpfwc"
+        },
+        "vmSize": {
+            "value": "Standard_D3_v2"
+        },
+        "sicKey": {
+            "value": "G0yTED@Esn%SGHU"
+        },
+        "virtualNetworkName": {
+            "value": "brh-euw-vnt-p-hub"
+        },
+        "virtualNetworkAddressPrefixes": {
+            "value": [
+                "10.45.0.0/16"
+            ]
+        },
+        "subnet1Name": {
+            "value": "brh-euw-snt-p-hub-cp-ext"
+        },
+        "subnet1Prefix": {
+            "value": "10.45.0.0/28"
+        },
+        "subnet1StartAddress": {
+            "value": "10.45.0.12"
+        },
+        "subnet2Name": {
+            "value": "brh-euw-snt-p-hub-cp-int"
+        },
+        "subnet2Prefix": {
+            "value": "10.45.0.16/28"
+        },
+        "subnet2StartAddress": {
+            "value": "10.45.0.26"
+        },
+        "vnetNewOrExisting": {
+            "value": "existing"
+        },
+        "virtualNetworkExistingRGName": {
+            "value": "brh-euw-rsg-p-hub-network"
+        },
+        "bootstrapScript": {
+            "value": ""
+        },
+        "allowDownloadFromUploadToCheckPoint": {
+            "value": "true"
+        },
+        "additionalDiskSizeGB": {
+            "value": 0
+        },
+        "diskType": {
+            "value": "Standard_LRS"
+        },
+        "managedSystemAssigned": {
+            "value": "yes"
+        },
+        "sourceImageVhdUri": {
+            "value": "noCustomUri"
+        },
+        "availabilityOptions": {
+            "value": "Availability Set"
+        },
+        "customMetrics": {
+            "value": "yes"
+        },
+        "floatingIP": {
+            "value": "no"
+        },
+        "publicIPPrefix": {
+            "value": "no"
+        },
+         "_artifactsLocation": {
+            "value": "https://raw.githubusercontent.com/CheckPointSW/CloudGuardIaaS/master/azure/templates/"
+        },
+                "adminShell": {
+            "value": "/etc/cli.sh"            
+        },
+        "storageAccountName": {
+            "value": "brheuwstopfwc002"
+        },
+        "elbPublicIPName": {
+            "value": "brh-euw-pip-p-hub-elb-02"
+        },
+        "elbName": {
+            "value": "brh-euw-elb-p-hub-fwc1"
+        },
+        "ilbName": {
+            "value": "brh-euw-ilb-p-hub-fwc1"
+        },
+        "availabilitySetName": {
+            "value": "Brheuwclpfwc-AvailabilitySet"
+        },
+        "Publicip": {
+            "value": "brh-euw-pip-p-hub-fwc0"
+        },
+        "Publicip1": {
+            "value": "brheuwclpfwc1"
+        }
+
+            }
+}

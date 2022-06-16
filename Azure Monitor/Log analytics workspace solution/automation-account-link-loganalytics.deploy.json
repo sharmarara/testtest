@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loganalyticsworkspacename": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the hub log analytics workspace"
+            }
+        },
+        "Automationaccount": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the automation account"
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('loganalyticsworkspacename'),'/',parameters('Automationaccount'))]",
+            "type": "Microsoft.OperationalInsights/workspaces/linkedServices",
+            "apiVersion": "2015-11-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "resourceId": "[resourceId('Microsoft.Automation/automationAccounts',parameters('Automationaccount'))]"
+            }
+        }
+    ],
+    "outputs": {}
+}

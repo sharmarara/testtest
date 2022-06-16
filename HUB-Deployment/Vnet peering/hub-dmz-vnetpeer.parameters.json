@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SpokeVnet" :{ 
+            "value": "brh-euw-vnt-p-hubdmz"
+
+        },
+        "SpokeVnetPrefix":{ 
+            "value": "10.47.0.0/16"
+        },
+        "SpokeSubsId":{
+            "value": "c2242621-293d-4604-918a-42718bca43b8"
+        },
+
+        "SpokeVnetRG":{ 
+            "value": "brh-euw-rsg-p-hubdmz-network"
+        }
+    }
+}

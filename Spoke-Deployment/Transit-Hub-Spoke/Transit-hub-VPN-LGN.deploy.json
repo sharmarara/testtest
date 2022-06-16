@@ -1,0 +1,157 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "TransithubResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+
+        "TransitHubVirtualNetwork": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Vnet of Transit hub"
+            }
+        },
+        "TransitHubPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Public IP for VPN gateway for TransitHub"
+            }
+        },
+
+        "TransitHubGatewaysubnet": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the gatewaysubnet for TransitHub"
+            }
+        },
+
+        "TransitHubGatewayName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the VPN gateway of TransitHub"
+            }
+        },
+
+        "Connection 1": {
+            "type": "string",
+            "metadata": {
+                "description": "Connection name from transitlng to Hublng"
+            }
+        },
+
+        "Sharedkey": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "Transithublngname": {
+            "type": "string",
+            "metadata": {
+                "description": "name of the local gateway for transit hub"
+            }
+        },
+        "Transithubgwaddress": {
+            "type": "string",
+            "metadata": {
+                "description": "Public gateway address for hub gateway"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('TransitHubPublicIP')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },
+        {
+            "name": "[parameters('TransitHubGatewayName')]",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('TransitHubPublicIP'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "vnetGatewayConfig",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('TransitHubVirtualNetwork'), parameters('TransitHubGatewaysubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('TransitHubPublicIP'))]"
+                            }
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "VpnGw2",
+                    "tier": "VpnGw2"
+
+
+                },
+                "gatewayType": "Vpn",
+                "vpnGatewayGeneration": "Generation2",
+                "vpnType": "RouteBased",
+                "enableBgp": false
+            }
+        },
+        {
+            "name": "[parameters('Transithublngname')]",
+            "type": "Microsoft.Network/localNetworkGateways",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('TransitHubPublicIP'))]",
+                "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('TransitHubGatewayName'))]"
+            ],
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "localNetworkAddressSpace": {
+                    "addressPrefixes": [
+                        "10.45.0.0/16",
+                        "10.56.0.0/16"
+                    ]
+                },
+                "gatewayIpAddress": "[parameters('Transithubgwaddress')]"
+            }
+        },
+        {
+            "name": "[parameters('Connection 1')]",
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('TransitHubGatewayName'))]",
+                "[resourceId('Microsoft.Network/localNetworkGateways', parameters('Transithublngname'))]"
+            ],
+            "properties": {
+                "virtualNetworkGateway1": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworkGateways', parameters('TransitHubGatewayName'))]"
+                },
+                "localNetworkGateway2": {
+                    "id": "[resourceId('Microsoft.Network/localNetworkGateways', parameters('Transithublngname'))]"
+                },
+                "connectionType": "IPsec",
+                "routingWeight": 0,
+                "sharedKey": "[parameters('Sharedkey')]"
+            }
+        }
+
+    ],
+    "outputs": {}
+}

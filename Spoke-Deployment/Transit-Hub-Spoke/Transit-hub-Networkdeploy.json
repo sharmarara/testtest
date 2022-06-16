@@ -1,0 +1,319 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azurefirewallname": {
+            "type": "string",            
+            "metadata": {
+                "description": "Name of the azure firewall"
+            }
+        }, 
+        "virtualNetworkName": {
+            "type": "string",            
+            "metadata": {
+                "description": "Virtual network where azurefirewall is deployed"
+            }
+        },
+        "virtualnetworkrg": {
+            "type": "string",            
+            "metadata": {
+                "description": "The resourcegroup name of the virtual network"
+            }
+        },
+        "firewallSubnet": {
+            "type": "string",            
+            "metadata": {
+                "description": "Name of the azure firewall subnet"
+            }
+        },
+        "publicipname": {
+            "type": "string",            
+            "metadata": {
+                "description": "Name of the public IP for azure firewall"
+            }
+        },
+        "firewallroutetable": {
+            "type": "string",            
+            "metadata": {
+                "description": "The route table name for the azure firewall"
+            }
+        },
+        "availabilityzone": {
+            "type": "array",
+            "metadata": {
+                "description": "The avaiability zone for azure firewall"
+            }
+        },
+        "networkCollectionName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+
+        {
+            "name": "[parameters('azurefirewallname')]",
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2019-11-01",
+            "location": "West Europe",
+            "zones": "[parameters('availabilityzone')]",
+            "tags": {
+            },
+            "properties": {
+                "networkRuleCollections": [
+                    {
+                        "name": "[parameters('networkCollectionName')]",
+                        "properties": {
+                            "priority": 200,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow-rpa-to-dwf_backend_blueprism",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.60.0.0/24"
+                                    ],
+                                    "destinationPorts": [
+                                        "8199",
+                                        "8200",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP",
+                                        "UDP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-dwf_backend_blueprism_rdp-to-rpa",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.60.0.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationPorts": [
+                                        "8180",
+                                        "8181",
+                                        "3389"
+                                    ],
+                                    "protocols": [
+                                        "TCP",
+                                        "UDP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-dwf_backend_wimrm-to-rpa",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.3.2.11/32"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationPorts": [
+                                        "5985",
+                                        "5986",
+                                        "80",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_ansible",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.3.2.5/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8642",
+                                        "80",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_oms",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.3.3.4/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8080",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_saptool",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.0.0/16",
+                                        "10.55.0.0/16",
+                                        "10.58.0.0/16",
+                                        "10.59.0.0/16"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.5.6.4/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8181"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ipConfigurations": [
+                    {
+                        "name": "brh-trn-euw-nic-hub-afw-01",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId(parameters('virtualnetworkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('firewallSubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicipname'))]"
+                            }
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "AZFW_VNet",
+                    "tier": "Standard"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicipname'))]"
+            ]
+        },
+        {
+            "name": "[parameters('publicipname')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2019-11-01",
+            "location": "West Europe",
+            "sku": {
+                "name": "standard"
+            },
+            "tags": {
+                "createdFor": "firewall1"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "name": "[parameters('firewallroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2019-11-01",
+            "location": "West Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/azureFirewalls', parameters('azurefirewallname'))]"
+            ],
+            "tags": {
+            },
+            "properties": {
+                "routes": [
+                    {
+                        "name": "brh-trn-euw-udr-hub-afw-to-dwf-backend",
+                        "properties": {
+                            "addressPrefix": "10.60.0.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.1.251.4"
+                        }
+                    },
+                    {
+                        "name": "brh-trn-euw-udr-hub-afw-to-dwf-backend-winrm",
+                        "properties": {
+                            "addressPrefix": "10.3.2.11/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.1.251.4"
+                        }
+                    },
+                    {
+                        "name": "brh-trn-euw-udr-hub-afw-to-dwf-chocolately",
+                        "properties": {
+                            "addressPrefix": "10.3.2.5/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.1.251.4"
+                        }
+                    },
+                    {
+                        "name": "brh-trn-euw-udr-hub-afw-to-dwf-oms",
+                        "properties": {
+                            "addressPrefix": "10.3.3.4/32",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.1.251.4"
+                        }
+                    },
+                    {
+                        "name": "brh-trn-euw-udr-hub-afw-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "Internet"
+
+                        }
+                    }
+                ],
+                "disableBgpRoutePropagation": false
+            }
+        },
+        {
+            "name": "[concat(parameters('virtualNetworkName'),'/',parameters('firewallSubnet'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2018-10-01",
+            "location": "West Europe",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', parameters('firewallroutetable'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.53.2.0/26",
+                "routeTable": {
+                    "id": "[resourceId('Microsoft.Network/routeTables',parameters('firewallroutetable'))]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+
+    }
+}

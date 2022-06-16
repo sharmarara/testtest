@@ -1,0 +1,121 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AlertName": {
+            "type": "string",            
+            "metadata": {
+                "description": "Name of the alert"
+            }
+        },
+        "Actiongroup": {
+            "type": "string",            
+            "metadata": {
+                "description": "The name of the actiongroup for the alert"
+            }
+        },
+        "Alertdescription": {
+            "type": "string",
+            "metadata": {
+                "description": "Alert description"
+            }
+        },
+        "Subscriptionid": {
+            "type": "string",
+            "metadata": {
+                "description": "The subscription id "
+            }
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+                {
+            "type": "microsoft.insights/activityLogAlerts",
+            "apiVersion": "2020-10-01",
+            "name": "[parameters('AlertName')]",
+            "location": "Global",
+            "properties": {
+                "scopes": [
+                    "[parameters('Subscriptionid')]"
+                ],
+                 "description": "[parameters('Alertdescription')]",
+                "condition": {
+                    "allOf": [
+                        {
+                            "field": "category",
+                            "equals": "ServiceHealth"
+                        },
+                        {
+                            "anyOf": [
+                                {
+                                    "field": "properties.incidentType",
+                                    "equals": "Incident"
+                                },
+                                {
+                                    "field": "properties.incidentType",
+                                    "equals": "Maintenance"
+                                },
+                                {
+                                    "field": "properties.incidentType",
+                                    "equals": "Informational"
+                                },
+                                {
+                                    "field": "properties.incidentType",
+                                    "equals": "ActionRequired"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "properties.impactedServices[*].ServiceName",
+                            "containsAny": [
+                                "Action Groups",
+                                "Activity Logs & Alerts",
+                                "Advisor",
+                                "Alerts & Metrics",
+                                "Alerts",
+                                "Azure Active Directory",
+                                "Azure Monitor",
+                                "Azure Policy",
+                                "Backup",
+                                "ExpressRoute \\ ExpressRoute Circuits",
+                                "ExpressRoute \\ ExpressRoute Gateways",
+                                "Load Balancer",
+                                "Log Analytics",
+                                "Marketplace",
+                                "Microsoft Azure portal",
+                                "Network Infrastructure",
+                                "Network Watcher",
+                                "Security Center",
+                                "Site Recovery",
+                                "Storage",
+                                "Virtual Machines",
+                                "Virtual Network",
+                                "VPN Gateway",
+                                "VPN Gateway \\ Virtual WAN"
+                            ]
+                        },
+                        {
+                            "field": "properties.impactedServices[*].ImpactedRegions[*].RegionName",
+                            "containsAny": [
+                                "Global",
+                                "North Europe",
+                                "West Europe"
+                            ]
+                        }
+                    ]
+                },
+                "actions": {
+                    "actionGroups": [
+                        {
+                            "actionGroupId": "[parameters('Actiongroup')]",
+                            "webhookProperties": {}
+                        }
+                    ]
+                },
+                "enabled": true
+            }
+        }
+    ],
+    "outputs": {}
+}

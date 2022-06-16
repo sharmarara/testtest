@@ -1,0 +1,535 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymenttemplate.json#",
+  "contentversion": "1.0.0.0",
+  "parameters": {
+    "activitylogalertenabled": {
+      "type": "bool",
+      "defaultvalue": true,
+      "metadata": {
+        "description": "indicates whether or not the alert is enabled."
+      }
+    },
+    "actiongroupresourceid": {
+      "type": "string",
+      "metadata": {
+        "description": "resource id for the action group."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Virtual machine restarted",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtual machine - operation restart",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allOf": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.compute/virtualmachines"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Compute/virtualMachines/restart/action"
+            }
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Virtual machine powered off",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtual machine - operation poweroff",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.compute/virtualmachines"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Compute/virtualMachines/powerOff/action"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Virtual machine deallocated",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtual machine - operation deallocation",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.compute/virtualmachines"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Compute/virtualMachines/deallocate/action"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Network security group deleted",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the network security group - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/networksecuritygroups"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/networkSecurityGroups/delete"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Public Ip created or Modified",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the public ip address - operation create/update",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/publicipaddresses"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/publicIPAddresses/write"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete Management lock",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the managment lock - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.authorization/locks"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Authorization/locks/delete"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete routetable",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the route table - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/routetables"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/routeTables/delete"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete resourcegroup",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the resource group - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.resources/subscriptions/resourcegroups"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Resources/subscriptions/resourceGroups/delete"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Create or update routetable",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the routetable - operation create/update",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/routetables"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/routeTables/write"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Create or update virtualnetwork",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtualnetwork - operation create/update",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/virtualnetworks"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/virtualNetworks/write"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete virtualnetwork",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtualnetwork - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allof": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/virtualnetworks"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/virtualNetworks/delete"
+            }
+
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete PublicIP",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the PublicIP - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allOf": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/publicipaddresses"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/publicIPAddresses/delete"
+            }
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Create or update Network Security group",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the network security group - operation create/update",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allOf": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.network/networksecuritygroups"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Network/networkSecurityGroups/write"
+            }
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "microsoft.insights/activitylogalerts",
+      "apiversion": "2017-04-01",
+      "name": "Alert - Delete Virtual Machine",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('activitylogalertenabled')]",
+        "description": "Alert for the virtual machine - operation delete",
+        "scopes": [
+          "[subscription().id]"
+        ],
+        "condition": {
+          "allOf": [
+            {
+              "field": "category",
+              "equals": "Administrative"
+            },
+            {
+              "field": "resourceType",
+              "equals": "microsoft.compute/virtualmachines"
+            },
+            {
+              "field": "operationName",
+              "equals": "Microsoft.Compute/virtualMachines/delete"
+            }
+          ]
+        },
+        "actions": {
+          "actiongroups": [
+            {
+              "actiongroupid": "[parameters('actiongroupresourceid')]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

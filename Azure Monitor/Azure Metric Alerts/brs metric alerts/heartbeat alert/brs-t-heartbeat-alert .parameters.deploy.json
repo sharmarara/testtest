@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "alertname": {
+            "value": "Alert - Hearbeat for Virtual Machine"
+        },
+        "loganalyticsworkspaceresourceid": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-monitor/providers/Microsoft.OperationalInsights/workspaces/brs-euw-la-t-spoke-01"
+        },
+        "actionGroup": {
+            "value": "/subscriptions/916cea10-da09-4458-9969-54db1d71975f/resourceGroups/brs-euw-rsg-t-monitor/providers/Microsoft.Insights/actiongroups/brs-euw-ag-t-amon-01"
+        },
+        "heartbeatthreshold": {
+            "value": "0" 
+        }
+    }
+}

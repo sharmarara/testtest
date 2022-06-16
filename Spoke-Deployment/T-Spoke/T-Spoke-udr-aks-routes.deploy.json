@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": { },
+    "functions": [],
+    "variables": {
+
+        "Testaksroutetable": "brs-euw-udr-t-aks"  
+    },
+    "resources": [
+        {
+            "name": "[variables('Testaksroutetable')]",
+            "type": "Microsoft.Network/routeTables",
+            "location": "West Europe",
+            "apiVersion": "2019-11-01",
+            "properties": {
+                "routes": [
+                    {
+                        "name": "brs-euw-udr-t-aks-to-brh-euw-snt-p-hub-infra",
+                        "properties": {
+                            "addressPrefix": "10.45.0.128/26",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-t-aks-to-brh-euw-snt-p-hub-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.2.0/24",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.52"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-t-aks-to-brh-euw-snt-p-hub-jp-mgmt",
+                        "properties": {
+                            "addressPrefix": "10.45.0.64/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-t-aks-to-brh-euw-snt-p-hub-cp-ext",
+                        "properties": {
+                            "addressPrefix": "10.45.0.0/28",
+                            "nextHopType": "None"
+                        }
+                    },
+                    {
+                        "name": "brs-euw-udr-t-aks-to-internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.45.0.20"
+
+                        }
+                    }
+
+                ]
+
+            }
+        }
+    ],
+    "outputs": {}
+}

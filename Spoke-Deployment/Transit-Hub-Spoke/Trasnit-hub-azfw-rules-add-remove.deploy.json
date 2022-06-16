@@ -1,0 +1,273 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azurefirewallname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the azure firewall"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual network where azurefirewall is deployed"
+            }
+        },
+        "virtualnetworkrg": {
+            "type": "string",
+            "metadata": {
+                "description": "The resourcegroup name of the virtual network"
+            }
+        },
+        "firewallSubnet": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the azure firewall subnet"
+            }
+        },
+        "publicipname": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the public IP for azure firewall"
+            }
+        },
+        "networkCollectionName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Network Collection rules"
+            }
+        },
+        "networkcollectioName-deny": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Network Collection rules"
+            }
+        },
+        "availabilityzone": {
+            "type": "array",
+            "metadata": {
+                "description": "The avaiability zone for azure firewall"
+            }
+        }
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+
+        {
+            "name": "[parameters('azurefirewallname')]",
+            "type": "Microsoft.Network/azureFirewalls",
+            "apiVersion": "2019-11-01",
+            "location": "West Europe",
+            "zones": "[parameters('availabilityzone')]",
+            "properties": {
+                "networkRuleCollections": [
+                    {
+                        "name": "[parameters('networkCollectionName')]",
+                        "properties": {
+                            "priority": 200,
+                            "action": {
+                                "type": "Allow"
+                            },
+                            "rules": [
+                                {
+                                    "name": "allow-rpa-to-dwf_backend_blueprism",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.60.0.0/24"
+                                    ],
+                                    "destinationPorts": [
+                                        "8199",
+                                        "8200",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP",
+                                        "UDP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-dwf_backend_blueprism_rdp-to-rpa",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.60.0.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationPorts": [
+                                        "8180",
+                                        "8181",
+                                        "3389"
+                                    ],
+                                    "protocols": [
+                                        "TCP",
+                                        "UDP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-dwf_backend_wimrm-to-rpa",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.3.2.11/32"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationPorts": [
+                                        "5985",
+                                        "5986",
+                                        "80",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_ansible",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.3.2.5/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8642",
+                                        "80",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_oms",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.3.3.4/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8080",
+                                        "443"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-rpa-to-dwf_saptool",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.5.6.4/32"
+                                    ],
+                                    "destinationPorts": [
+                                        "8181"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                },
+                                {
+                                    "name": "allow-dwf-backend-to-rpa-roboclients",
+                                    "description": "",
+                                    "sourceAddresses": [
+                                        "10.100.100.0/24"
+                                    ],
+                                    "destinationAddresses": [
+                                        "10.56.5.0/24",
+                                        "10.55.5.0/24",
+                                        "10.58.5.0/24",
+                                        "10.59.5.0/24"
+                                    ],
+                                    "destinationPorts": [
+                                        "3389"
+                                    ],
+                                    "protocols": [
+                                        "TCP"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[parameters('networkcollectioName-deny')]",
+                        "properties": {
+                            "priority": 500,
+                            "action": {
+                                "type": "Deny"
+                            },
+                            "rules": [
+                                {
+                                    "name": "Implicit deny-all",
+                                    "description":"",
+                                    "destinationAddresses": [
+                                        "*"
+                                    ],
+                                    "destinationPorts": [
+                                        "*"
+                                    ],
+                                    "protocols": [
+                                        "Any"
+                                    ],
+                                    "sourceAddresses": [
+                                        "*"
+                                    ]
+
+                                }
+                            ]
+
+                        }
+
+                    }
+                ],
+                "ipConfigurations": [
+                    {
+                        "name": "brh-trn-euw-nic-hub-afw-01",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId(parameters('virtualnetworkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('firewallSubnet'))]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicipname'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "value": "brh-trn-euw-vnt-hub-01"
+        },
+        "subnetPrefix": {
+            "value": ["10.53.2.0/26"]
+        },
+        "subnetName": {
+            "value": ["AzureFirewallSubnet"]
+        },
+        "location": {
+            "value": "west europe"
+        }
+    }
+}

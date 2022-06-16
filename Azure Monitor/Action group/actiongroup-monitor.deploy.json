@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "actionGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "Unique name (within the Resource Group) for the Action group."
+      }
+    },
+    "actionGroupShortName": {
+      "type": "string",
+      "metadata": {
+        "description": "Short name (maximum 12 characters) for the Action group."
+      }
+    },
+    "WebhookserviceUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The webhook url to which the alerts will be pushed"
+      }
+    },
+    "Webhookname": {
+        "type": "string",
+        "metadata": {
+            "description": "The webhook url to which the alerts will be pushed"
+        }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/actionGroups",
+      "apiVersion": "2019-03-01",
+      "name": "[parameters('actionGroupName')]",
+      "location": "Global",
+      "properties": {
+        "groupShortName": "[parameters('actionGroupShortName')]",
+        "enabled": true,
+        "webhookReceivers": [
+          {
+            "name": "[parameters('Webhookname')]",
+            "serviceUri": "[parameters('WebhookserviceUri')]",
+            "useCommonAlertSchema": true
+           }
+        ]
+      }
+    }
+  ],
+  "outputs":{
+      "actionGroupId":{
+          "type":"string",
+          "value":"[resourceId('Microsoft.Insights/actionGroups',parameters('actionGroupName'))]"
+      }
+  }
+}

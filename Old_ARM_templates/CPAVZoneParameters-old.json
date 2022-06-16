@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "cloudGuardVersion": {
+            "value": "R80.30 - Bring Your Own License"
+        },
+        "adminPassword": {
+           "reference": {
+    "keyVault": {
+      "id": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/BR-EUW-RSG-P-KEYV/providers/Microsoft.KeyVault/vaults/BR-EUW-KV-P-PWMGMT"
+    },
+    "secretName": "VM-PASSWORD"
+  }
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "vmName": {
+            "value": "BREUWLPCPFW"
+        },
+        "vmSize": {
+            "value": "Standard_DS3_v2"
+        },
+        "sicKey": {
+            "value": "abc123456789"
+        },
+        "virtualNetworkName": {
+            "value": "BR-EUW-VNT-P-HUB"
+        },
+        "virtualNetworkAddressPrefixes": {
+            "value":"10.45.0.0/16"
+        },
+        "subnet1Name": {
+            "value": "BR-EUW-SNT-P-CP-EXT"
+        },
+        "subnet1Prefix": {
+            "value": "10.45.0.0/28"
+        },
+        "subnet1StartAddress": {
+            "value": "10.45.0.4"
+        },
+        "subnet2Name": {
+            "value": "BR-EUW-SNT-P-CP-INT"
+        },
+        "subnet2Prefix": {
+            "value": "10.45.0.16/28"
+        },
+        "subnet2StartAddress": {
+            "value": "10.45.0.20"
+        },
+        "vnetNewOrExisting": {
+            "value": "existing"
+        },
+        "virtualNetworkExistingRGName": {
+            "value": "BR-EUW-RSG-P-HUB-NETWORK"
+        },
+        "allowDownloadFromUploadToCheckPoint": {
+            "value": "true"
+        },
+        "additionalDiskSizeGB": {
+            "value": 0
+        },
+        "diskType": {
+            "value": "Standard_LRS"
+        },
+        "managedSystemAssigned": {
+            "value": "yes"
+        },
+        "sourceImageVhdUri": {
+            "value": "noCustomUri"
+        },
+        "availabilityOptions": {
+            "value": "Availability Zones"
+        }
+    }
+}

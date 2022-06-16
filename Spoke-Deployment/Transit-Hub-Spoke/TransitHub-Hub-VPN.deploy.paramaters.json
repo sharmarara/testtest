@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "HubResourceGroup": {
+            "value": "brh-euw-rsg-p-hub-network" 
+        },
+        "TransithubResourceGroup": {
+            "value": "brh-trn-euw-rsg-hub-network" 
+        },
+        "TransitHubVirtualNetwork": {
+            "value": "brh-trn-euw-vnt-hub-01" 
+        },
+        "TransitHubPublicIP": {
+            "value": "brh-trn-euw-pip-hub-vng-01" 
+        },
+        "TransitHubGatewaysubnet": {
+            "value": "GatewaySubnet" 
+        },
+        "TransitHubGatewayName": {
+            "value": "brh-trn-euw-vng-hub-01" 
+        },
+        "HubGatewayName": {
+            "value": "brh-euw-vng-p-hub-01" 
+        },
+        "Connection 1": {
+            "value": "TransithubVnet-Hubvnet" 
+        },
+        "Connection 2": {
+            "value": "Hubvnet-Transithubvnet"
+        },
+        "SharedKey": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/brh-euw-rsg-p-hub-keyv/providers/Microsoft.KeyVault/vaults/brh-euw-kv-p-hub-mgmt-01"
+                },
+                "secretName": "Sharedkey-TransitHub-Hub"
+            }
+        }
+    }
+}

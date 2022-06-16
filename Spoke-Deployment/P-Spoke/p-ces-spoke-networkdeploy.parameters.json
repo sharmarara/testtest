@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "ces-euw-vnt-p-01"
+      },
+      
+      
+      "VnetAddressPrefix": {
+        "value": "10.71.0.0/16"
+      },
+      
+      "SubnetPrefix": {
+        "value": ["10.71.0.0/24","10.71.1.0/24","10.71.2.0/24","10.71.3.0/24","10.71.4.0/24"]
+      },
+      "SubnetName": {
+        "value": ["ces-euw-snt-p-feiaas","ces-euw-snt-p-app","ces-euw-snt-p-fepaas","ces-euw-snt-p-dbiaas","ces-euw-snt-p-dbpaas"]
+      },
+      "nsgName": {
+        "value": ["ces-euw-nsg-p-feiaas","ces-euw-nsg-p-app","ces-euw-nsg-p-fepaas","ces-euw-nsg-p-dbiaas","ces-euw-nsg-p-dbpaas"]
+      },
+      "udrName":{
+        "value": ["ces-euw-udr-p-feiaas","ces-euw-udr-p-app","ces-euw-udr-p-fepaas","ces-euw-udr-p-dbiaas","ces-euw-udr-p-dbpaas"]
+      },
+      "Location": {
+        "value": "West Europe"
+      }
+    }
+  }

@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "BRS-EUW-VNT-D-SPOKE01"
+      },
+      "PeeredVnet": {
+       "value": "BR-EUW-VNT-P-HUB"
+      },
+      "PeeredVnetResourceID": {
+        "value": "/subscriptions/c2242621-293d-4604-918a-42718bca43b8/resourceGroups/BR-EUW-RSG-P-HUB-NETWORK/providers/Microsoft.Network/virtualNetworks/BR-EUW-VNT-P-HUB"
+      },
+      "vnetPeeringRequied": {
+      "value": true     
+      },
+      "VnetAddressPrefix": {
+        "value": "10.49.0.0/16"
+      },
+      "SubnetPrefix": {
+        "value": ["10.49.0.0/24"]
+      },
+      "SubnetName": {
+        "value": ["BRS-EUW-SNT-D-AKS"]
+      },
+      "nsgName": {
+        "value": ["BRS-EUW-NSG-D-AKS"]
+      },
+      "udrName":{
+        "value": ["BRS-EUW-UDR-D-AKS"]
+      },
+      "Location": {
+        "value": "West Europe"
+      }
+    }
+  }

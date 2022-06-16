@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ergatewaypublicip-name": {
+            "value": "brh-euw-pip-p-hub-erg-01" 
+        },
+        "ergatewaysubnet": {
+            "value": "Gatewaysubnet" 
+        },
+        "ergatewayvirtualnetwork": {
+            "value": "brh-euw-vnt-p-hub" 
+        },
+        "ervpngatewayname": {
+            "value": "brh-euw-erg-p-hub-01" 
+        },
+        "ercircuitname": {
+            "value": "brh-euw-erc-p-hub-bt-01" 
+        },
+        "erconnectionname": {
+            "value": "brh-euw-erg-p-hub-01-to-brh-euw-erc-p-hub-bt-01" 
+        }
+    }
+}

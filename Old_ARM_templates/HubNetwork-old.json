@@ -1,0 +1,114 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "type": "string"
+      },
+
+      "VnetAddressPrefix": {
+        "type": "string"
+      },
+
+      "GatewaySubnetPrefix": {
+        "type": "string"
+      },
+
+      "SubnetPrefix": {
+        "type": "array"
+      },
+
+      "SubnetName": {
+        "type": "array"
+      },
+      "nsgName": {
+        "type": "array"
+      },
+      "udrName": {
+        "type": "array"
+      },
+      "Location": {
+         "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('nsgName')[copyIndex()]]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            },
+        "copy": {
+              "name": "nsg-copy",
+              "count": "[length(parameters('nsgName'))]",
+              "mode": "Serial"
+                }
+     },
+    {
+        "type": "Microsoft.Network/virtualNetworks",
+        "apiVersion": "2018-08-01",
+        "name": "[parameters('VnetName')]",
+        "location": "[parameters('Location')]",
+        "properties": {
+            "addressSpace": {
+                "addressPrefixes": [
+                    "[parameters('VnetAddressPrefix')]"
+                ]
+            }
+        }
+    },
+    {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', parameters('SubnetName')[copyIndex()])]",
+        "dependsOn": [
+          "[parameters('VnetName')]",
+          "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('SubnetPrefix')[copyIndex()]]",
+          "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName')[copyIndex()])]"
+          }
+        },
+        "copy": {
+            "name": "subnet-copy",
+            "count": "[length(parameters('SubnetName'))]",
+            "mode": "Serial"
+        }
+      },
+      {
+        "apiVersion": "2018-10-01",
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "location": "[parameters('Location')]",
+        "name":"[concat(parameters('VnetName'), '/', 'GatewaySubnet')]",
+        "dependsOn": [
+          "[parameters('VnetName')]"
+        ],
+        "properties": {
+          "addressPrefix": "[parameters('GatewaySubnetPrefix')]"
+        }
+      },
+    
+         {
+            "name": "[parameters('udrName')[copyIndex()]]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2018-08-01",
+            "location": "[parameters('Location')]",
+            "tags": {},
+            "copy": {
+                     "name": "udr-copy",
+                     "count": "[length(parameters('udrName'))]"
+                    },
+            "properties": {
+            "disableBgpRoutePropagation": true
+                    }
+        
+          }
+     
+],
+    "outputs": {}
+}

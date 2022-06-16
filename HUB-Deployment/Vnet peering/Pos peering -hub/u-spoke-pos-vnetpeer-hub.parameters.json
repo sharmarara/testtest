@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SpokeVnet" :{ 
+            "value": "pos-euw-vnt-u-01"
+
+        },
+        "SpokeVnetPrefix":{ 
+            "value": "10.68.0.0/16"
+        },
+        "SpokeSubsId":{
+            "value": "4e66d59a-7eca-40dd-91c9-c40ecb3304c0"
+        },
+
+        "SpokeVnetRG":{ 
+            "value": "pos-euw-rsg-u-network"
+        }
+    }
+}

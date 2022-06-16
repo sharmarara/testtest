@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VnetName": {
+        "value": "exs-euw-vnt-d-01"
+      },
+      "VnetAddressPrefix": {
+        "value": "10.56.0.0/16"
+      },
+
+      "SubnetPrefix": {
+        "value": ["10.56.0.0/24","10.56.1.0/24","10.56.2.0/24","10.56.3.0/24","10.56.4.0/24","10.56.5.0/24"]
+      },
+      "SubnetName": {
+        "value": ["exs-euw-snt-d-feiaas","exs-euw-snt-d-app","exs-euw-snt-d-fepaas","exs-euw-snt-d-dbiaas","exs-euw-snt-d-dbpaas","exs-euw-snt-d-rpa"]
+      },
+      "nsgName": {
+        "value": ["exs-euw-nsg-d-feiaas","exs-euw-nsg-d-app","exs-euw-nsg-d-fepaas","exs-euw-nsg-d-dbiaas","exs-euw-nsg-d-dbpaas","exs-euw-nsg-d-rpa"]
+      },
+      "udrName":{
+        "value": ["exs-euw-udr-d-feiaas","exs-euw-udr-d-app","exs-euw-udr-d-fepaas","exs-euw-udr-d-dbiaas","exs-euw-udr-d-dbpaas","exs-euw-udr-d-rpa"]
+      },
+      "Location": {
+        "value": "west europe"
+      }
+    }
+  }
